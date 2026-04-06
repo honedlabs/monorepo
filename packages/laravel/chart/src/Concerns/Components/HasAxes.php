@@ -9,6 +9,7 @@ use Honed\Chart\Axis;
 use Honed\Chart\AxisX;
 use Honed\Chart\AxisY;
 use Honed\Chart\Enums\Dimension;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Enumerable;
 
 trait HasAxes
@@ -16,74 +17,20 @@ trait HasAxes
     /**
      * The axes.
      *
-     * @var list<Axis>
+     * @var \Illuminate\Support\Collection<int, Axis>
      */
-    protected $axes = [];
+    protected $axes;
 
     /**
      * Add an axis to the chart.
      *
      * @return $this
      */
-    public function axis(?Axis $axis): static
+    public function axis(Axis $axis): static
     {
-        if ($axis) {
-            $this->axes[] = $axis;
-        }
+        $this->axes = $this->getAxes()->push($axis);
 
         return $this;
-    }
-
-    /**
-     * Add axes to the chart.
-     *
-     * @param  Axis|array<int, Axis>|Enumerable<int, Axis>  $axes
-     * @return $this
-     */
-    public function axes(Axis|array|Enumerable $axes): static
-    {
-        if ($axes instanceof Axis) {
-            return $this->axis($axes);
-        }
-
-        if ($axes instanceof Enumerable) {
-            /** @var list<Axis> */
-            $axes = $axes->all();
-        }
-
-        $this->axes = [...$this->axes, ...$axes];
-
-        return $this;
-    }
-
-    /**
-     * Get the axes.
-     *
-     * @return list<Axis>
-     */
-    public function getAxes(): array
-    {
-        return $this->axes;
-    }
-
-    /**
-     * Get the x-axes.
-     *
-     * @return list<Axis>
-     */
-    public function getXAxes(): array
-    {
-        return $this->filteredAxes(Dimension::X);
-    }
-
-    /**
-     * Get the y-axes.
-     *
-     * @return list<Axis>
-     */
-    public function getYAxes(): array
-    {
-        return $this->filteredAxes(Dimension::Y);
     }
 
     /**
@@ -92,12 +39,12 @@ trait HasAxes
      * @param  Axis|(Closure(Axis):Axis)|bool|null  $value
      * @return $this
      */
-    public function yAxis(Axis|Closure|bool|null $value = true): static
+    public function y(Axis|Closure|bool|null $value = true): static
     {
         $axis = match (true) {
-            $value => $this->newAxisY(),
+            $value => $this->newAxis(Dimension::Y),
             ! $value => null,
-            $value instanceof Closure => $value($this->newAxisY()),
+            $value instanceof Closure => $value($this->newAxis(Dimension::Y)),
             default => $value,
         };
 
@@ -110,12 +57,12 @@ trait HasAxes
      * @param  Axis|(Closure(Axis):Axis)|bool|null  $value
      * @return $this
      */
-    public function xAxis(Axis|Closure|bool|null $value = true): static
+    public function x(Axis|Closure|bool|null $value = true): static
     {
         $axis = match (true) {
-            $value => $this->newAxisX(),
+            $value => $this->newAxis(Dimension::X),
             ! $value => null,
-            $value instanceof Closure => $value($this->newAxisX()),
+            $value instanceof Closure => $value($this->newAxis(Dimension::X)),
             default => $value,
         };
 
@@ -123,71 +70,90 @@ trait HasAxes
     }
 
     /**
-     * Get the x-axes representation.
+     * Add axes to the chart.
      *
-     * @return list<array<string, mixed>>
+     * @param  Axis|\Illuminate\Support\Enumerable<int, Axis>|list<Axis>  $axes
+     * @return $this
      */
-    public function getXAxesToArray(): array
+    public function axes(Axis|Enumerable|array $axes): static
     {
-        $axes = $this->getXAxes();
-
-        if (empty($axes)) {
-            $axes = [$this->newAxisX()];
+        if ($axes instanceof Axis) {
+            return $this->axis($axes);
         }
 
-        return array_map(
-            static fn (Axis $axis) => $axis->toArray(),
-            $axes
-        );
+        $this->axes = $this->getAxes()->merge($axes);
+
+        return $this;
     }
 
     /**
-     * Get the y-axes representation.
+     * Get the axes.
      *
-     * @return list<array<string, mixed>>
+     * @return \Illuminate\Support\Collection<int, Axis>
      */
-    public function getYAxesToArray(): array
+    public function getAxes(?Dimension $value = null): Collection
     {
-        $axes = $this->getYAxes();
+        if ($value) {
+            $axes = $this->axes ??= new Collection();
 
-        if (empty($axes)) {
-            $axes = [$this->newAxisY()];
+            return $axes->filter(
+                static fn (Axis $axis) => $axis->getDimension() === $value
+            );
         }
-
-        return array_map(
-            static fn (Axis $axis) => $axis->toArray(),
-            $axes
-        );
+        
+        return $this->axes ??= new Collection();
     }
 
     /**
-     * Get the filtered axes.
-     *
-     * @return list<Axis>
+     * Determine if the chart has axes, optionally for a specific dimension.
      */
-    protected function filteredAxes(Dimension $dimension): array
+    public function hasAxes(?Dimension $value = null): bool
     {
-        return array_values(
-            array_filter(
-                $this->axes,
-                static fn (Axis $axis) => $axis->getDimension() === $dimension
-            )
-        );
+        return $this->getAxes($value)->isNotEmpty();
     }
 
     /**
      * Create a new x-axis, or use the existing one.
      */
-    protected function newAxisX(): AxisX
+    public function newAxis(Dimension $value): Axis
     {
-        return AxisX::make();
+        return Axis::make()->dimension($value);
     }
 
     /**
-     * Create a new y-axis, or use the existing one.
+     * Add a new axis to the chart.
+     *
+     * @return $this
      */
-    protected function newAxisY(): AxisY
+    public function withAxis(Dimension $value): static
     {
-        return AxisY::make();
+        return $this->axis($this->newAxis($value));
+    }
+
+    /**
+     * Add a new axis to the chart if it does not exist.
+     * 
+     * @return $this
+     */
+    public function withMissingAxis(Dimension $value): static
+    {
+        if (! $this->hasAxes($value)) {
+            return $this->withAxis($value);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get the list of axes.
+     *
+     * @return list<array<string, mixed>>
+     */
+    public function listAxes(Dimension $value): array
+    {
+        return array_map(
+            static fn (Axis $axis) => $axis->toArray(),
+            $this->getAxes($value)->all()
+        );
     }
 }

@@ -8,6 +8,7 @@ use Honed\Chart\Chart;
 use Honed\Chart\Concerns\HasId;
 use Honed\Chart\Chartable;
 use Honed\Chart\Concerns\Components\HasTitle;
+use Honed\Chart\Concerns\Components\HasTooltip;
 use Honed\Chart\Concerns\InteractsWithData;
 use Honed\Chart\Contracts\Resolvable;
 use Honed\Chart\Enums\ChartType;
@@ -15,29 +16,42 @@ use Honed\Chart\Style\Concerns\HasCursor;
 use Honed\Core\Concerns\HasName;
 use Illuminate\Support\Traits\ForwardsCalls;
 
+use function Illuminate\Support\enum_value;
+
 abstract class Series extends Chartable implements Resolvable
 {
     use ForwardsCalls;
     use HasName;
     use HasCursor;
+    use HasTooltip;
     use HasId;
     use InteractsWithData;
-
+    
     /**
      * The type of the series.
      * 
-     * @var \Honed\Chart\Enums\ChartType
+     * @var string
      */
     public $type;
+
+    /**
+     * Determine if the series requires axes to be provided.
+     */
+    public function requiresAxes(): bool
+    {
+        return true;
+    }
 
     /**
      * Set the type of the series.
      *
      * @return $this
      */
-    protected function type(ChartType $value): static
+    public function type(string|ChartType $value): static
     {
-        $this->type = $value;
+        $value = is_string($value) ? ChartType::from($value) : $value;
+
+        $this->type = $value->value;
 
         return $this;
     }
@@ -45,7 +59,7 @@ abstract class Series extends Chartable implements Resolvable
     /**
      * Get the type of the series.
      */
-    public function getType(): ChartType
+    public function getType(): string
     {
         return $this->type;
     }
@@ -55,7 +69,9 @@ abstract class Series extends Chartable implements Resolvable
      */
     public function toChart(): Chart
     {
-        return Chart::make()->series($this);
+        return Chart::make()
+            ->source($this->getSource())
+            ->series($this);
     }
 
     /**
@@ -65,11 +81,13 @@ abstract class Series extends Chartable implements Resolvable
     {
         $this->define();
 
-        // if (! $this->hasData()) {
-        //     $this->data($data);
-        // }
+        if ($this->hasData()) {
+            return;
+        }
 
-        $this->data($this->extract($data));
+        $data = $this->retrieve($data, $this->getValue());
+
+        $this->data($data);
     }
 
     /**

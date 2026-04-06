@@ -37,23 +37,6 @@ class Axis extends Chartable implements Resolvable
     protected $dimension;
 
     /**
-     * Handle dynamic method calls into the method.
-     *
-     * @param  string  $method
-     * @param  array<int,mixed>  $parameters
-     * @return mixed
-     *
-     * @throws \BadMethodCallException
-     */
-    public function __call($method, $parameters)
-    {
-        return match ($method) {
-            'tooltip' => $this->forwardCallTo($this->getTooltip(), $method, $parameters),
-            default => parent::__call($method, $parameters),
-        };
-    }
-
-    /**
      * Set the type of the axis.
      *
      * @return $this
@@ -160,7 +143,13 @@ class Axis extends Chartable implements Resolvable
     {
         $this->define();
 
-        $this->data($this->extract($data));
+        if ($this->hasData()) {
+            return;
+        }
+
+        $data = $this->retrieve($data, $this->getValue());
+
+        $this->data($data);
     }
 
     /**

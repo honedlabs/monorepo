@@ -2,11 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Chart\Chart;
-use Honed\Chart\Legend\Legend;
 use Honed\Chart\Series\Pie;
-use Honed\Chart\Title\Title;
-use Honed\Chart\Tooltip\Tooltip;
 
 beforeEach(function () {
     // option = {

@@ -12,22 +12,6 @@ class Bar extends Series
     use HasWidth;
 
     /**
-     * Handle dynamic method calls into the method.
-     *
-     * @param  string  $method
-     * @param  array<int,mixed>  $parameters
-     * @return mixed
-     *
-     * @throws \BadMethodCallException
-     */
-    public function __call($method, $parameters)
-    {
-        return match ($method) {
-            default => parent::__call($method, $parameters),
-        };
-    }
-
-    /**
      * Provide the series with any necessary setup.
      */
     protected function setUp(): void

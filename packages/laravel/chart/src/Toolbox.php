@@ -18,23 +18,6 @@ class Toolbox extends Chartable
     use HasId;
 
     /**
-     * Handle dynamic method calls into the method.
-     *
-     * @param  string  $method
-     * @param  array<int,mixed>  $parameters
-     * @return mixed
-     *
-     * @throws \BadMethodCallException
-     */
-    public function __call($method, $parameters)
-    {
-        return match ($method) {
-            'tooltip' => $this->forwardCallTo($this->getTooltip(), $method, $parameters),
-            default => parent::__call($method, $parameters),
-        };
-    }
-
-    /**
      * Get the representation of the tooltip.
      *
      * @return array<string, mixed>

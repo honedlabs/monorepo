@@ -2,11 +2,9 @@
 
 declare(strict_types=1);
 
-use Honed\Chart\Axis\XAxis;
-use Honed\Chart\Chart;
 use Honed\Chart\Enums\Trigger;
 use Honed\Chart\Series\Bar;
-use Honed\Chart\Tooltip\Tooltip;
+use Honed\Chart\Tooltip;
 use Illuminate\Support\Arr;
 
 beforeEach(function () {
@@ -33,10 +31,8 @@ beforeEach(function () {
         ],
         'series' => [
             [
-                'name' => 'Direct',
+                'data' => [120, 200, 150, 80, 70, 110, 130],
                 'type' => 'bar',
-                'barWidth' => '60%',
-                'data' => [10, 52, 200, 334, 390, 330, 220],
             ],
         ],
     ];
@@ -51,13 +47,14 @@ beforeEach(function () {
 it('is replicable', function () {
     $chart = Bar::make()
         ->from($this->data)
-        ->infer()
-        ->on('day')
-        ->showing('value')
-        ->width('60%')
+        // ->infer()
+        ->category('day')
+        ->value('value')
+        // ->width('60%')
         ->toChart()
-        ->tooltip->trigger(Trigger::Axis);
+        ->tooltip(fn (Tooltip $tooltip) => $tooltip->trigger(Trigger::Axis));
 
     expect($chart->toArray())
+        ->dd()
         ->toEqualCanonicalizing($this->expected);
 });

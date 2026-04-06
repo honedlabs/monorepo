@@ -17,24 +17,6 @@ class Line extends Series
     use HasItemStyle;
 
     /**
-     * Handle dynamic method calls into the method.
-     *
-     * @param  string  $method
-     * @param  array<int,mixed>  $parameters
-     * @return mixed
-     *
-     * @throws \BadMethodCallException
-     */
-    public function __call($method, $parameters)
-    {
-        return match ($method) {
-            'areaStyle' => $this->forwardCallTo($this->withAreaStyle(), $method, $parameters),
-            'itemStyle' => $this->forwardCallTo($this->withItemStyle(), $method, $parameters),
-            default => parent::__call($method, $parameters),
-        };
-    }
-
-    /**
      * Provide the series with any necessary setup.
      */
     protected function setUp(): void

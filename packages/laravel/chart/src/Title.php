@@ -44,23 +44,6 @@ class Title extends Chartable
     }
 
     /**
-     * Handle dynamic method calls into the method.
-     *
-     * @param  string  $method
-     * @param  array<int,mixed>  $parameters
-     * @return mixed
-     *
-     * @throws \BadMethodCallException
-     */
-    public function __call($method, $parameters)
-    {
-        return match ($method) {
-            'textStyle' => $this->forwardCallTo($this->getTextStyle(), $method, $parameters),
-            default => parent::__call($method, $parameters),
-        };
-    }
-
-    /**
      * Get the representation of the title.
      *
      * @return array<string, mixed>

@@ -11,7 +11,7 @@ trait HasTrigger
     /**
      * The type of triggering for the toolip.
      *
-     * @var ?Trigger
+     * @var ?string
      */
     protected $trigger;
 
@@ -20,9 +20,11 @@ trait HasTrigger
      *
      * @return $this
      */
-    public function trigger(Trigger|string $trigger): static
+    public function trigger(string|Trigger $value): static
     {
-        $this->trigger = is_string($trigger) ? Trigger::from($trigger) : $trigger;
+        $value = is_string($value) ? Trigger::from($value) : $value;
+
+        $this->trigger = $value->value;
 
         return $this;
     }
@@ -60,7 +62,7 @@ trait HasTrigger
     /**
      * Get the type of triggering for the toolip.
      */
-    public function getTrigger(): ?Trigger
+    public function getTrigger(): ?string
     {
         return $this->trigger;
     }

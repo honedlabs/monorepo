@@ -5,15 +5,19 @@ declare(strict_types=1);
 namespace Honed\Chart\Concerns\Components;
 
 use Honed\Chart\Series\Series;
+use Illuminate\Support\Collection;
 
+/**
+ * @phpstan-require-extends \Honed\Chart\Chartable
+ */
 trait HasSeries
 {
     /**
-     * The series.
+     * List of the series.
      *
-     * @var list<Series>
+     * @var \Illuminate\Support\Collection<int, Series>
      */
-    protected $series = [];
+    protected $series;
 
     /**
      * Merge the series.
@@ -26,7 +30,7 @@ trait HasSeries
         /** @var array<int, Series> */
         $series = is_array($series) ? $series : func_get_args();
 
-        $this->series = [...$this->series, ...$series];
+        $this->series = $this->getSeries()->merge($series);
 
         return $this;
     }
@@ -34,23 +38,46 @@ trait HasSeries
     /**
      * Get the series.
      *
-     * @return array<int, Series>
+     * @return \Illuminate\Support\Collection<int, Series>
      */
-    public function getSeries(): array
+    public function getSeries(): Collection
     {
-        return $this->series;
+        return $this->series ??= new Collection();
     }
 
     /**
-     * Get the series representation.
-     *
-     * @return array<int, array<string, mixed>>
+     * Determine if the series requires axes to be provided.
      */
-    public function seriesToArray(): array
+    public function requiresAxes(): bool
+    {
+        return $this->getSeries()
+            ->contains(
+                static fn (Series $series) => $series->requiresAxes()
+            );
+    }
+
+    /**
+     * Get the list of series.
+     *
+     * @return list<array<string, mixed>>
+     */
+    public function listSeries(): array
     {
         return array_map(
             static fn (Series $series) => $series->toArray(),
-            $this->getSeries()
+            $this->getSeries()->all()
         );
+    }
+
+    /**
+     * Resolve the series with the given data.
+     *
+     * @param list<mixed> $data
+     */
+    protected function resolveSeries(mixed $data): void
+    {
+        foreach ($this->getSeries() as $series) {
+            $series->resolve($data);
+        }
     }
 }

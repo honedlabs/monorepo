@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
+use Honed\Chart\Axis;
 use Honed\Chart\Chart;
 use Honed\Chart\Series\Bar;
+use Honed\Chart\Tooltip;
 use Illuminate\Support\Arr;
 
 beforeEach(function () {
@@ -59,15 +61,19 @@ beforeEach(function () {
 it('is replicable', function () {
     $chart = Chart::make()
         ->from($this->data)
-        ->on('country')
+        ->category('country')
         ->title('World Population')
-        ->tooltip->triggerByAxis()
+        ->tooltip(fn (Tooltip $tooltip) => $tooltip->triggerByAxis())
         ->legend()
-        ->x->boundaryGap(0, 0.01)
-        ->y->category()
+        ->x(fn (Axis $axis) => $axis->boundaryGap(0, 0.01))
+        ->y(fn (Axis $axis) => $axis->category())
         ->series([
-            Bar::make()->showing('2011'),
-            Bar::make()->showing('2012'),
+            Bar::make()
+                ->name('2011')
+                ->value('2011'),
+            Bar::make()
+                ->name('2012')
+                ->value('2012'),
         ]);
 
     expect($chart->toArray())

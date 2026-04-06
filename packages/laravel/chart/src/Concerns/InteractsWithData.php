@@ -6,16 +6,22 @@ namespace Honed\Chart\Concerns;
 
 use Closure;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Arr;
 
 trait InteractsWithData
 {
     /**
-     * @var list<array<string, mixed>|Arrayable<string, mixed>|object>|null
+     * @var bool
+     */
+    protected $infer = true;
+
+    /**
+     * @var list<mixed>|null
      */
     protected $source;
 
     /**
-     * @var list<mixed>
+     * @var list<mixed>|null
      */
     protected $data;
 
@@ -37,11 +43,9 @@ trait InteractsWithData
 
     /**
      * Set the source of the data.
-     * 
-     * @template T of array<string, mixed>|Arrayable<string, mixed>|object
-     * 
-     * @param list<T>|Arrayable<int, T> $value
-     * @return $this
+     *
+     * @param list<mixed>|Arrayable<int, mixed> $source
+     * @return static
      */
     public function from(array|Arrayable $source): static
     {
@@ -50,22 +54,27 @@ trait InteractsWithData
 
     /**
      * Set the source of the data.
-     * 
-     * @template T of array<string, mixed>|Arrayable<string, mixed>|object
-     * 
-     * @param list<T>|Arrayable<int, T>|null $value
+     *
+     * @param list<mixed>|Arrayable<int, mixed>|null $source
+     * @return static
      */
-    public function source(array|Arrayable|null $value): static
+    public function source(array|Arrayable|null $source): static
     {
-        $this->source = $value instanceof Arrayable ? $value->toArray() : $value;
+        if ($source === null) {
+            $this->source = null;
+        } elseif ($source instanceof Arrayable) {
+            $this->source = array_values($source->toArray());
+        } else {
+            $this->source = $source;
+        }
 
         return $this;
     }
 
     /**
      * Get the source of the data.
-     * 
-     * @return list<array<string, mixed>|Arrayable<string, mixed>|object>|null
+     *
+     * @return list<mixed>|null
      */
     public function getSource(): ?array
     {
@@ -76,7 +85,7 @@ trait InteractsWithData
      * Set how the category should be determined.
      * 
      * @param string|Closure():mixed $value
-     * @return $this
+     * @return static
      */
     public function category(string|Closure $value): static
     {
@@ -99,7 +108,7 @@ trait InteractsWithData
      * Set how the value should be determined.
      * 
      * @param string|Closure():mixed $value
-     * @return $this
+     * @return static
      */
     public function value(string|Closure $value): static
     {
@@ -122,23 +131,46 @@ trait InteractsWithData
      * Set the data.
      * 
      * @param list<mixed>|Arrayable<int, mixed> $value
-     * @return $this
+     * @return static
      */
     public function data(array|Arrayable $value): static
     {
-        $this->data = $value instanceof Arrayable ? $value->toArray() : $value;
+        $this->data = $value instanceof Arrayable ? array_values($value->toArray()) : $value;
 
         return $this;
+    }
 
+    /**
+     * Determine if the object has data already set.
+     */
+    public function hasData(): bool
+    {
+        return isset($this->data);
     }
 
     /**
      * Get the data.
      * 
-     * @return list<mixed>
+     * @return list<mixed>|null
      */
-    public function getData(): array
+    public function getData(): ?array
     {
         return $this->data;
+    }
+
+    /**
+     * Retrieve a set of values from a given source.
+     *
+     * @param list<int, mixed> $source
+     * @param string|Closure $value
+     * @return array
+     */
+    public function retrieve(array $source, string|Closure $value): array
+    {
+        if (is_string($value)) {
+            return Arr::pluck($source, $value);
+        }
+
+        return Arr::map($source, $value);
     }
 }

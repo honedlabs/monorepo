@@ -7,6 +7,7 @@ namespace Honed\Chart\Series;
 use Honed\Chart\Enums\ChartType;
 use Honed\Chart\Series\Series;
 use Illuminate\Support\Str;
+use Override;
 
 class Pie extends Series
 {
@@ -18,29 +19,13 @@ class Pie extends Series
     protected $radius = [0, '75%'];
 
     /**
-     * Handle dynamic method calls into the method.
-     *
-     * @param  string  $method
-     * @param  array<int,mixed>  $parameters
-     * @return mixed
-     *
-     * @throws \BadMethodCallException
-     */
-    public function __call($method, $parameters)
-    {
-        return match ($method) {
-            default => parent::__call($method, $parameters),
-        };
-    }
-
-    /**
      * Set the radius of the pie chart.
      * 
      * @return $this
      */
     public function radius(int|string $inside, int|string $outside): static
     {
-        $this->radius = [$this->toPercentage($inside), $this->toPercentage($outside)];
+        $this->radius = [$inside, $outside];
 
         return $this;
     }
@@ -52,7 +37,7 @@ class Pie extends Series
      */
     public function innerRadius(int|string $value): static
     {
-        $this->radius[0] = $this->toPercentage($value);
+        $this->radius[0] = $value;
 
         return $this;
     }
@@ -64,7 +49,7 @@ class Pie extends Series
      */
     public function outerRadius(int|string $value): static
     {
-        $this->radius[1] = $this->toPercentage($value);
+        $this->radius[1] = $value;
 
         return $this;
     }
@@ -79,14 +64,22 @@ class Pie extends Series
         return $this->radius;
     }
 
-    public function value(string $value): static
+    /**
+     * Determine if the series requires axes to be provided.
+     */
+    public function requiresAxes(): bool
     {
-        return $this;
+        return false;
     }
 
-    public function category(string $value): static
+    /**
+     * Resolve the series with the given data.
+     *
+     * @param list<mixed> $data
+     */
+    public function resolve(mixed $data): void
     {
-        return $this;
+        $this->define();
     }
 
     /**
@@ -97,13 +90,5 @@ class Pie extends Series
         parent::setUp();
 
         $this->type(ChartType::Pie);
-    }
-
-    /**
-     * Convert the value to a percentage.
-     */
-    protected function toPercentage(int|string $value): string
-    {
-        return Str::finish((string) $value, '%');
     }
 }

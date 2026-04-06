@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Chart;
 
 use Honed\Chart\Concerns\Components\HasAxes;
-use Honed\Chart\Concerns\HasData;
 use Honed\Chart\Concerns\Components\HasLegend;
 use Honed\Chart\Concerns\Components\HasSeries;
 use Honed\Chart\Concerns\Components\HasTextStyle;
@@ -13,20 +12,15 @@ use Honed\Chart\Concerns\Components\HasTitle;
 use Honed\Chart\Concerns\Components\HasToolbox;
 use Honed\Chart\Concerns\Components\HasTooltip;
 use Honed\Chart\Concerns\InteractsWithData;
+use Honed\Chart\Contracts\Resolvable;
+use Honed\Chart\Enums\Dimension;
+use Honed\Chart\Support\HigherOrderComponentProxy;
 use Illuminate\Support\Traits\ForwardsCalls;
 
-/**
- * @property-read \Honed\Chart\Legend $legend
- * @property-read \Honed\Chart\Title $title
- * @property-read \Honed\Chart\Tooltip $tooltip
- * @property-read \Honed\Chart\Toolbox $toolbox
- * @property-read \Honed\Chart\TextStyle $textStyle
- */
-class Chart extends Chartable
+class Chart extends Chartable implements Resolvable
 {
     use ForwardsCalls;
     use HasAxes;
-    use HasData;
     use HasLegend;
     use HasSeries;
     use HasTextStyle;
@@ -36,55 +30,93 @@ class Chart extends Chartable
     use InteractsWithData;
 
     /**
-     * Handle dynamic method calls into the method.
+     * Whether to flip the x and y axes, only applicable to bar charts.
      *
-     * @param  string  $method
-     * @param  array<int,mixed>  $parameters
-     * @return mixed
-     *
-     * @throws \BadMethodCallException
+     * @var bool
      */
-    public function __call($method, $parameters)
+    public $flip = false;
+
+    /**
+     * Set whether to flip the x and y axes, only applicable to bar charts.
+     *
+     * @return $this
+     */
+    public function flip(bool $value = true): static
     {
-        return match ($method) {
-            'legend' => $this->forwardCallTo($this->withLegend(), $method, $parameters),
-            'title' => $this->forwardCallTo($this->withTitle(), $method, $parameters),
-            'tooltip' => $this->forwardCallTo($this->withTooltip(), $method, $parameters),
-            'toolbox' => $this->forwardCallTo($this->withToolbox(), $method, $parameters),
-            'textStyle' => $this->forwardCallTo($this->withTextStyle(), $method, $parameters),
-            default => parent::__call($method, $parameters),
-        };
+        $this->flip = $value;
+
+        return $this;
+    }
+
+    /**
+     * Set to not flip the x and y axes.
+     *
+     * @return $this
+     */
+    public function dontflip(): static
+    {
+        return $this->flip(false);
+    }
+
+    /**
+     * Determine if the x and y axes are flipped.
+     *
+     * @return bool
+     */
+    public function isFlipped(): bool
+    {
+        return $this->flip;
     }
 
     /**
      * Resolve the data into the components.
+     * 
+     * @param list<mixed> $data
      */
-    protected function resolve(): void
+    public function resolve(mixed $data): void
     {
-        foreach ($this->getAxes() as $axis) {
-            $axis->resolve($this->getData());
+        $this->resolveAxes($data);
+
+        $this->resolveSeries($data);
+    }
+
+    /**
+     * Resolve the axes with the given data.
+     * 
+     * @param list<mixed> $data
+     */
+    protected function resolveAxes(mixed $data): void
+    {
+        if (! $this->requiresAxes()) {
+            return;
         }
 
-        foreach ($this->getSeries() as $series) {
-            $series->resolve($this->getData());
+        $this->withMissingAxis(Dimension::X);
+        
+        $this->withMissingAxis(Dimension::Y);
+
+        foreach ($this->getAxes() as $axis) {
+            $axis->resolve($data);
         }
     }
 
     /**
-     * {@inheritDoc}
+     * Get the representation of the chart.
+     * 
+     * @return array<string, mixed>
      */
     protected function representation(): array
     {
         $this->define();
 
-        $this->resolve();
+        $this->resolve($this->getSource());
 
         return [
             'title' => $this->getTitle()?->toArray(),
             'legend' => $this->getLegend()?->toArray(),
             // 'grid' => $this->getGrid()?->toArray(),
-            'xAxis' => $this->getXAxesToArray(),
-            'yAxis' => $this->getYAxesToArray(),
+            'xAxis' => $this->listAxes(Dimension::X),
+            'yAxis' => $this->listAxes(Dimension::Y),
             // 'radiusAxis' => $this->getRadiusAxis()?->toArray(),
             // 'angleAxis' => $this->getAngleAxis()?->toArray(),
             // 'radar' => $this->getRadar()?->toArray(),
@@ -95,7 +127,7 @@ class Chart extends Chartable
             'toolbox' => $this->getToolbox()?->toArray(),
             // 'timeline' => $this->getTimeline()?->toArray(),
             // 'calendar' => $this->getCalendar()?->toArray(),
-            'series' => $this->seriesToArray(),
+            'series' => $this->listSeries(),
             // 'color' => $this->getColor(),
             // 'backgroundColor' => $this->getBackgroundColor(),
             'textStyle' => $this->getTextStyle()?->toArray(),
