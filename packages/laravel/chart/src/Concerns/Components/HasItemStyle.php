@@ -14,7 +14,7 @@ trait HasItemStyle
      *
      * @var ?ItemStyle
      */
-    protected $itemStyle;
+    protected $itemStyleInstance;
 
     /**
      * Set the area style.
@@ -24,7 +24,7 @@ trait HasItemStyle
      */
     public function itemStyle(ItemStyle|Closure|bool|null $value = true): static
     {
-        $this->itemStyle = match (true) {
+        $this->itemStyleInstance = match (true) {
             $value => $this->withItemStyle(),
             ! $value => null,
             $value instanceof Closure => $value($this->withItemStyle()),
@@ -39,7 +39,7 @@ trait HasItemStyle
      */
     public function getItemStyle(): ?ItemStyle
     {
-        return $this->itemStyle;
+        return $this->itemStyleInstance;
     }
 
     /**
@@ -47,6 +47,6 @@ trait HasItemStyle
      */
     protected function withItemStyle(): ItemStyle
     {
-        return $this->itemStyle ??= ItemStyle::make();
+        return $this->itemStyleInstance ??= ItemStyle::make();
     }
 }

@@ -38,11 +38,14 @@ beforeEach(function () {
     ];
 
     $this->data = array_map(
-        static fn (string $day, int|float $value): array => ['day' => $day, 'value' => $value],
+        static fn ($day, $value) => [
+            'day' => $day,
+            'value' => $value
+        ],
         Arr::get($this->expected, 'xAxis.0.data'),
         Arr::get($this->expected, 'series.0.data')
     );
-});
+})->only();
 
 it('is replicable', function () {
     $chart = Bar::make()
@@ -51,7 +54,7 @@ it('is replicable', function () {
         ->category('day')
         ->value('value')
         ->toChart()
-        ->tooltip(fn (Tooltip $tooltip) => $tooltip->trigger(Trigger::Axis));
+        ->tooltip->triggerByAxis();
 
-    expect($chart->toArray())->toEqual($this->expected);
+    expect($chart->toArray())->dd()->toEqual($this->expected);
 });

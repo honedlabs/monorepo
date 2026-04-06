@@ -14,7 +14,7 @@ trait HasLegend
      *
      * @var ?Legend
      */
-    protected $legend;
+    protected $legendInstance;
 
     /**
      * Add a legend.
@@ -24,7 +24,7 @@ trait HasLegend
      */
     public function legend(Legend|Closure|bool|null $value = true): static
     {
-        $this->legend = match (true) {
+        $this->legendInstance = match (true) {
             $value => $this->withLegend(),
             ! $value => null,
             $value instanceof Closure => $value($this->withLegend()),
@@ -39,7 +39,7 @@ trait HasLegend
      */
     public function getLegend(): ?Legend
     {
-        return $this->legend;
+        return $this->legendInstance;
     }
 
     /**
@@ -47,6 +47,6 @@ trait HasLegend
      */
     protected function withLegend(): Legend
     {
-        return $this->legend ??= Legend::make();
+        return $this->legendInstance ??= Legend::make();
     }
 }

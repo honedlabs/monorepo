@@ -14,7 +14,7 @@ trait HasLabel
      *
      * @var ?Label
      */
-    protected $label;
+    protected $labelInstance;
 
     /**
      * Set the label.
@@ -24,7 +24,7 @@ trait HasLabel
      */
     public function label(Label|Closure|bool|null $value = true): static
     {
-        $this->label = match (true) {
+        $this->labelInstance = match (true) {
             $value => $value,
             ! $value => null,
             is_null($value) => $this->withLabel(),
@@ -40,7 +40,7 @@ trait HasLabel
      */
     public function getLabel(): ?Label
     {
-        return $this->label;
+        return $this->labelInstance;
     }
 
     /**
@@ -48,6 +48,6 @@ trait HasLabel
      */
     protected function withLabel(): Label
     {
-        return $this->label ??= Label::make();
+        return $this->labelInstance ??= Label::make();
     }
 }

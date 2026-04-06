@@ -14,7 +14,7 @@ trait HasLineStyle
      *
      * @var ?LineStyle
      */
-    protected $lineStyle;
+    protected $lineStyleInstance;
 
     /**
      * Set the line style.
@@ -24,7 +24,7 @@ trait HasLineStyle
      */
     public function lineStyle(LineStyle|Closure|bool|null $value = true): static
     {
-        $this->lineStyle = match (true) {
+        $this->lineStyleInstance = match (true) {
             $value => $this->withLineStyle(),
             ! $value => null,
             $value instanceof Closure => $value($this->withLineStyle()),
@@ -39,7 +39,7 @@ trait HasLineStyle
      */
     public function getLineStyle(): ?LineStyle
     {
-        return $this->lineStyle;
+        return $this->lineStyleInstance;
     }
 
     /**
@@ -47,6 +47,6 @@ trait HasLineStyle
      */
     protected function withLineStyle(): LineStyle
     {
-        return $this->lineStyle ??= LineStyle::make();
+        return $this->lineStyleInstance ??= LineStyle::make();
     }
 }

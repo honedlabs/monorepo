@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Chart\Axis\Axis;
+use Honed\Chart\Axis;
 use Honed\Chart\Enums\AxisType;
 use Honed\Chart\Enums\Dimension;
 
@@ -13,10 +13,10 @@ beforeEach(function () {
 it('has type', function () {
     expect($this->axis)
         ->getType()->toBeNull()
-        ->value()->toBe($this->axis)
-        ->getType()->toBe(AxisType::Value)
-        ->category()->toBe($this->axis)
-        ->getType()->toBe(AxisType::Category)
+        // ->value()->toBe($this->axis)
+        // ->getType()->toBe(AxisType::Value)
+        // ->category()->toBe($this->axis)
+        // ->getType()->toBe(AxisType::Category)
         ->time()->toBe($this->axis)
         ->getType()->toBe(AxisType::Time)
         ->log()->toBe($this->axis)

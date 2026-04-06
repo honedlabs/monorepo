@@ -58,7 +58,7 @@ beforeEach(function () {
     ];
 
     $this->data = Arr::get($this->expected, 'series.0.data');
-})->only();
+});
 
 it('creates', function () {
     $chart = Pie::make()

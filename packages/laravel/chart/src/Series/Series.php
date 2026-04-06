@@ -29,7 +29,7 @@ abstract class Series extends Chartable implements Resolvable
     /**
      * The type of the series.
      *
-     * @var string
+     * @var ChartType
      */
     public $type;
 
@@ -48,9 +48,7 @@ abstract class Series extends Chartable implements Resolvable
      */
     public function type(string|ChartType $value): static
     {
-        $value = is_string($value) ? ChartType::from($value) : $value;
-
-        $this->type = $value->value;
+        $this->type = is_string($value) ? ChartType::from($value) : $value;
 
         return $this;
     }
@@ -58,7 +56,7 @@ abstract class Series extends Chartable implements Resolvable
     /**
      * Get the type of the series.
      */
-    public function getType(): string
+    public function getType(): ChartType
     {
         return $this->type;
     }
@@ -108,7 +106,7 @@ abstract class Series extends Chartable implements Resolvable
         $this->define();
 
         return [
-            'type' => $this->getType(),
+            'type' => $this->getType()->value,
             'id' => $this->getId(),
             'name' => $this->name,
             'data' => $this->getData(),

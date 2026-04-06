@@ -14,7 +14,7 @@ trait HasTextStyle
      *
      * @var ?TextStyle
      */
-    protected $textStyle;
+    protected $textStyleInstance;
 
     /**
      * Set the text style.
@@ -24,7 +24,7 @@ trait HasTextStyle
      */
     public function textStyle(TextStyle|Closure|bool|null $value = true): static
     {
-        $this->textStyle = match (true) {
+        $this->textStyleInstance = match (true) {
             $value => $this->withTextStyle(),
             ! $value => null,
             $value instanceof Closure => $value($this->withTextStyle()),
@@ -39,7 +39,7 @@ trait HasTextStyle
      */
     public function getTextStyle(): ?TextStyle
     {
-        return $this->textStyle;
+        return $this->textStyleInstance;
     }
 
     /**
@@ -47,6 +47,6 @@ trait HasTextStyle
      */
     protected function withTextStyle(): TextStyle
     {
-        return $this->textStyle ??= TextStyle::make();
+        return $this->textStyleInstance ??= TextStyle::make();
     }
 }

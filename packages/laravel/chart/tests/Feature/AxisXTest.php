@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use Honed\Chart\Axis\XAxis;
+use Honed\Chart\AxisX;
 use Honed\Chart\Enums\Dimension;
 
 beforeEach(function () {
-    $this->axis = XAxis::make();
+    $this->axis = AxisX::make();
 });
 
 it('has x dimension', function () {

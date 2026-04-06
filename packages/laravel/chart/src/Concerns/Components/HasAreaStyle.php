@@ -14,7 +14,7 @@ trait HasAreaStyle
      *
      * @var ?AreaStyle
      */
-    protected $areaStyle;
+    protected $areaStyleInstance;
 
     /**
      * Set the area style.
@@ -24,7 +24,7 @@ trait HasAreaStyle
      */
     public function areaStyle(AreaStyle|Closure|bool|null $value = true): static
     {
-        $this->areaStyle = match (true) {
+        $this->areaStyleInstance = match (true) {
             $value => $this->withAreaStyle(),
             ! $value => null,
             $value instanceof Closure => $value($this->withAreaStyle()),
@@ -39,7 +39,7 @@ trait HasAreaStyle
      */
     public function getAreaStyle(): ?AreaStyle
     {
-        return $this->areaStyle;
+        return $this->areaStyleInstance;
     }
 
     /**
@@ -47,6 +47,6 @@ trait HasAreaStyle
      */
     protected function withAreaStyle(): AreaStyle
     {
-        return $this->areaStyle ??= AreaStyle::make();
+        return $this->areaStyleInstance ??= AreaStyle::make();
     }
 }

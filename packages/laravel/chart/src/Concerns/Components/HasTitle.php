@@ -14,7 +14,7 @@ trait HasTitle
      *
      * @var ?Title
      */
-    protected $title;
+    protected $titleInstance;
 
     /**
      * Add a title.
@@ -24,7 +24,7 @@ trait HasTitle
      */
     public function title(Title|Closure|string|bool|null $value = true): static
     {
-        $this->title = match (true) {
+        $this->titleInstance = match (true) {
             $value => $this->withTitle(),
             ! $value => null,
             is_string($value) => $this->withTitle()->text($value),
@@ -40,7 +40,7 @@ trait HasTitle
      */
     public function getTitle(): ?Title
     {
-        return $this->title;
+        return $this->titleInstance;
     }
 
     /**
@@ -48,6 +48,6 @@ trait HasTitle
      */
     protected function withTitle(): Title
     {
-        return $this->title ??= Title::make();
+        return $this->titleInstance ??= Title::make();
     }
 }

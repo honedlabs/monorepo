@@ -14,7 +14,7 @@ trait HasTooltip
      *
      * @var ?Tooltip
      */
-    protected $tooltip;
+    protected $tooltipInstance;
 
     /**
      * Add a tooltip.
@@ -24,7 +24,7 @@ trait HasTooltip
      */
     public function tooltip(Tooltip|Closure|bool|null $value = true): static
     {
-        $this->tooltip = match (true) {
+        $this->tooltipInstance = match (true) {
             $value => $this->withTooltip(),
             ! $value => null,
             $value instanceof Closure => $value($this->withTooltip()),
@@ -39,7 +39,7 @@ trait HasTooltip
      */
     public function getTooltip(): ?Tooltip
     {
-        return $this->tooltip;
+        return $this->tooltipInstance;
     }
 
     /**
@@ -47,6 +47,6 @@ trait HasTooltip
      */
     protected function withTooltip(): Tooltip
     {
-        return $this->tooltip ??= Tooltip::make();
+        return $this->tooltipInstance ??= Tooltip::make();
     }
 }

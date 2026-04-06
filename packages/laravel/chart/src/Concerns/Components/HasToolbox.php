@@ -14,7 +14,7 @@ trait HasToolbox
      *
      * @var ?Toolbox
      */
-    protected $toolbox;
+    protected $toolboxInstance;
 
     /**
      * Add a toolbox.
@@ -24,7 +24,7 @@ trait HasToolbox
      */
     public function toolbox(Toolbox|Closure|bool|null $value = true): static
     {
-        $this->toolbox = match (true) {
+        $this->toolboxInstance = match (true) {
             $value => $this->withToolbox(),
             ! $value => null,
             $value instanceof Closure => $value($this->withToolbox()),
@@ -39,7 +39,7 @@ trait HasToolbox
      */
     public function getToolbox(): ?Toolbox
     {
-        return $this->toolbox;
+        return $this->toolboxInstance;
     }
 
     /**
@@ -47,6 +47,6 @@ trait HasToolbox
      */
     protected function withToolbox(): Toolbox
     {
-        return $this->toolbox ??= Toolbox::make();
+        return $this->toolboxInstance ??= Toolbox::make();
     }
 }

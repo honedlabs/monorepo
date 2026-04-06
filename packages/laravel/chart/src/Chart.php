@@ -15,8 +15,12 @@ use Honed\Chart\Concerns\InteractsWithData;
 use Honed\Chart\Concerns\Support\Inferrable;
 use Honed\Chart\Contracts\Resolvable;
 use Honed\Chart\Enums\Dimension;
+use Honed\Chart\Proxies\HigherOrderTooltip;
 use Illuminate\Support\Traits\ForwardsCalls;
 
+/**
+ * @property-read HigherOrderTooltip<static> $tooltip
+ */
 class Chart extends Chartable implements Resolvable
 {
     use ForwardsCalls;
@@ -36,6 +40,20 @@ class Chart extends Chartable implements Resolvable
      * @var bool
      */
     public $flip = false;
+
+    /**
+     * Get a property of the chart.
+     *
+     * @param  string  $name
+     * @return mixed
+     */
+    public function __get(string $name): mixed
+    {
+        return match ($name) {
+            'tooltip' => new HigherOrderTooltip($this, $this->withTooltip()),
+            default => $this->{$name}
+        };
+    }
 
     /**
      * Set whether to flip the x and y axes, only applicable to bar charts.
@@ -120,8 +138,8 @@ class Chart extends Chartable implements Resolvable
             'title' => $this->getTitle()?->toArray(),
             'legend' => $this->getLegend()?->toArray(),
             // 'grid' => $this->getGrid()?->toArray(),
-            'xAxis' => $this->listAxes(Dimension::X) ?: null,
-            'yAxis' => $this->listAxes(Dimension::Y) ?: null,
+            'xAxis' => $this->listAxes(Dimension::X),
+            'yAxis' => $this->listAxes(Dimension::Y),
             // 'radiusAxis' => $this->getRadiusAxis()?->toArray(),
             // 'angleAxis' => $this->getAngleAxis()?->toArray(),
             // 'radar' => $this->getRadar()?->toArray(),

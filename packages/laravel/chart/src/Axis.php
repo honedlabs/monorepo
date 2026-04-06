@@ -89,7 +89,7 @@ class Axis extends Chartable implements Resolvable
         $data = $this->retrieve($data, $this->getCategory());
 
         if (is_null($data)) {
-            $data = [];
+            return;
         }
 
         if ($this->infers()) {
