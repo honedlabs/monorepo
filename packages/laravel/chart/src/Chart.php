@@ -14,6 +14,7 @@ use Honed\Chart\Concerns\Components\HasToolbox;
 use Honed\Chart\Concerns\Components\HasTooltip;
 use Honed\Chart\Concerns\InteractsWithData;
 use Honed\Chart\Concerns\Proxies\Proxyable;
+use Honed\Chart\Concerns\Style\HasColors;
 use Honed\Chart\Concerns\Support\Inferrable;
 use Honed\Chart\Contracts\Resolvable;
 use Honed\Chart\Enums\ChartType;
@@ -40,6 +41,7 @@ class Chart extends Chartable implements Resolvable
 {
     use ForwardsCalls;
     use HasAxes;
+    use HasColors;
     use HasGrid;
     use HasLegend;
     use HasSeries;
@@ -60,7 +62,7 @@ class Chart extends Chartable implements Resolvable
 
     /**
      * Get a property of the chart.
-     * 
+     *
      * @param  non-empty-string  $name
      */
     public function __get(string $name): mixed
@@ -183,7 +185,7 @@ class Chart extends Chartable implements Resolvable
             // 'timeline' => $this->getTimeline()?->toArray(),
             // 'calendar' => $this->getCalendar()?->toArray(),
             'series' => $this->listSeries(),
-            // 'color' => $this->getColor(),
+            'color' => $this->hasColors() ? $this->listColors() : null,
             // 'backgroundColor' => $this->getBackgroundColor(),
             'textStyle' => $this->getTextStyle()?->toArray(),
         ];

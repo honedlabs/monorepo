@@ -28,7 +28,7 @@ trait HasPointerMargin
 
     /**
      * Get the margin around the axis pointer label.
-     * 
+     *
      * @return int|float|list<int|float>|null
      */
     public function getPointerMargin(): int|float|array|null

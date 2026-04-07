@@ -27,8 +27,6 @@ trait HasPrecision
 
     /**
      * Get the precision of the axis pointer label.
-     *
-     * @return int|string|null
      */
     public function getPrecision(): int|string|null
     {

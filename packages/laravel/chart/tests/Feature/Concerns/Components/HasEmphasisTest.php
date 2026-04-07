@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Honed\Chart\Emphasis;
-use Honed\Chart\Proxies\HigherOrderEmphasis;
 use Honed\Chart\Series\Line;
 
 beforeEach(function () {

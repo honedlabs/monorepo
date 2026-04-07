@@ -27,8 +27,6 @@ trait HasSmooth
 
     /**
      * Get whether the label line is drawn with a smooth curve.
-     *
-     * @return bool|null
      */
     public function getSmooth(): ?bool
     {

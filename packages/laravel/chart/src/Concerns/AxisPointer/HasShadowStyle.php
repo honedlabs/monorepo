@@ -16,7 +16,7 @@ trait HasShadowStyle
 
     /**
      * Set the shadow style for the axis pointer.
-     * 
+     *
      * @param  ShadowStyle|(Closure(ShadowStyle): ShadowStyle)|bool|null  $value
      * @return $this
      */

@@ -23,8 +23,8 @@ use TypeError;
 use ValueError;
 
 /**
- * @property-read \Honed\Chart\Proxies\HigherOrderEmphasis<static> $emphasis
- * @property-read \Honed\Chart\Proxies\HigherOrderTooltip<static> $tooltip
+ * @property-read HigherOrderEmphasis<static> $emphasis
+ * @property-read HigherOrderTooltip<static> $tooltip
  */
 abstract class Series extends Chartable implements Resolvable
 {
@@ -47,7 +47,7 @@ abstract class Series extends Chartable implements Resolvable
 
     /**
      * Get a property of the series.
-     * 
+     *
      * @param  non-empty-string  $name
      */
     public function __get(string $name): mixed

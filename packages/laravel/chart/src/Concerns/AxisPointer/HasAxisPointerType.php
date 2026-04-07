@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Honed\Chart\Concerns\AxisPointer;
 
 use Honed\Chart\Enums\AxisPointerType;
+use TypeError;
+use ValueError;
 
 trait HasAxisPointerType
 {
@@ -18,8 +20,8 @@ trait HasAxisPointerType
      *
      * @return $this
      *
-     * @throws \ValueError
-     * @throws \TypeError
+     * @throws ValueError
+     * @throws TypeError
      */
     public function type(string|AxisPointerType $value): static
     {

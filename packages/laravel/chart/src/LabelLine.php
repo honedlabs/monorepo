@@ -13,7 +13,7 @@ use Honed\Chart\Concerns\Proxies\Proxyable;
 use Honed\Chart\Proxies\HigherOrderLineStyle;
 
 /**
- * @property-read \Honed\Chart\Proxies\HigherOrderLineStyle<static> $lineStyle
+ * @property-read HigherOrderLineStyle<static> $lineStyle
  */
 class LabelLine extends Chartable
 {
@@ -26,7 +26,7 @@ class LabelLine extends Chartable
 
     /**
      * Get a property of the label line.
-     * 
+     *
      * @param  non-empty-string  $name
      */
     public function __get(string $name): mixed
@@ -39,7 +39,7 @@ class LabelLine extends Chartable
 
     /**
      * Get the array representation of the label line.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function representation(): array

@@ -27,8 +27,6 @@ trait HasLength
 
     /**
      * Get the length of the label line.
-     *
-     * @return int|float|null
      */
     public function getLength(): int|float|null
     {

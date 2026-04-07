@@ -36,8 +36,6 @@ trait HasEmphasis
 
     /**
      * Get the emphasis configuration.
-     *
-     * @return Emphasis|null
      */
     public function getEmphasis(): ?Emphasis
     {

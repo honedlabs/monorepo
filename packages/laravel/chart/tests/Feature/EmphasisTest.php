@@ -27,7 +27,7 @@ it('has higher order proxies', function () {
     expect($this->emphasis->itemStyle)->toBeInstanceOf(HigherOrderItemStyle::class);
 
     expect($this->emphasis->lineStyle)->toBeInstanceOf(HigherOrderLineStyle::class);
-    
+
     expect($this->emphasis->areaStyle)->toBeInstanceOf(HigherOrderAreaStyle::class);
 });
 

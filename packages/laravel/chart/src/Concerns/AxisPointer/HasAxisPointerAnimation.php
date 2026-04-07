@@ -48,9 +48,6 @@ trait HasAxisPointerAnimation
         return $this;
     }
 
-    /**
-     * @return int|float|null
-     */
     public function getAnimationDurationUpdate(): int|float|null
     {
         return $this->animationDurationUpdate;

@@ -6,13 +6,13 @@ namespace Honed\Chart;
 
 use Honed\Chart\Concerns\Components\HasAreaStyle;
 use Honed\Chart\Concerns\Components\HasItemStyle;
+use Honed\Chart\Concerns\Components\HasLabel;
 use Honed\Chart\Concerns\Components\HasLabelLine;
 use Honed\Chart\Concerns\Components\HasLineStyle;
 use Honed\Chart\Concerns\Emphasis\HasDisabled;
 use Honed\Chart\Concerns\Emphasis\HasEmphasisBlurScope;
 use Honed\Chart\Concerns\Emphasis\HasEmphasisFocus;
 use Honed\Chart\Concerns\Emphasis\HasScale;
-use Honed\Chart\Concerns\Components\HasLabel;
 use Honed\Chart\Concerns\Proxies\Proxyable;
 use Honed\Chart\Proxies\HigherOrderAreaStyle;
 use Honed\Chart\Proxies\HigherOrderItemStyle;
@@ -21,11 +21,11 @@ use Honed\Chart\Proxies\HigherOrderLabelLine;
 use Honed\Chart\Proxies\HigherOrderLineStyle;
 
 /**
- * @property-read \Honed\Chart\Proxies\HigherOrderLabel<static> $label
- * @property-read \Honed\Chart\Proxies\HigherOrderLabelLine<static> $labelLine
- * @property-read \Honed\Chart\Proxies\HigherOrderItemStyle<static> $itemStyle
- * @property-read \Honed\Chart\Proxies\HigherOrderLineStyle<static> $lineStyle
- * @property-read \Honed\Chart\Proxies\HigherOrderAreaStyle<static> $areaStyle
+ * @property-read HigherOrderLabel<static> $label
+ * @property-read HigherOrderLabelLine<static> $labelLine
+ * @property-read HigherOrderItemStyle<static> $itemStyle
+ * @property-read HigherOrderLineStyle<static> $lineStyle
+ * @property-read HigherOrderAreaStyle<static> $areaStyle
  */
 class Emphasis extends Chartable
 {
@@ -59,7 +59,7 @@ class Emphasis extends Chartable
 
     /**
      * Get the array representation of the emphasis.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function representation(): array

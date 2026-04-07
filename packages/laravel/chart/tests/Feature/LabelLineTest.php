@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use Honed\Chart\LabelLine;
-use Honed\Chart\Proxies\HigherOrderLineStyle;
 use Honed\Chart\LineStyle;
+use Honed\Chart\Proxies\HigherOrderLineStyle;
 
 beforeEach(function () {
     $this->labelLine = LabelLine::make();

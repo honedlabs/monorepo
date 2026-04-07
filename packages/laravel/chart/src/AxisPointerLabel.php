@@ -16,7 +16,7 @@ use Honed\Chart\Concerns\Style\HasBorderWidth;
 use Honed\Chart\Proxies\HigherOrderTextStyle;
 
 /**
- * @property-read \Honed\Chart\Proxies\HigherOrderTextStyle<static> $textStyle
+ * @property-read HigherOrderTextStyle<static> $textStyle
  */
 class AxisPointerLabel extends Chartable
 {
@@ -32,7 +32,7 @@ class AxisPointerLabel extends Chartable
 
     /**
      * Get a property of the axis pointer label.
-     * 
+     *
      * @param  non-empty-string  $name
      */
     public function __get(string $name): mixed
@@ -45,7 +45,7 @@ class AxisPointerLabel extends Chartable
 
     /**
      * Get the array representation of the axis pointer label.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function representation(): array

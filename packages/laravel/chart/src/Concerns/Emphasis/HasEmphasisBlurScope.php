@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Honed\Chart\Concerns\Emphasis;
 
 use Honed\Chart\Enums\BlurScope;
+use TypeError;
+use ValueError;
 
 trait HasEmphasisBlurScope
 {
@@ -19,9 +21,9 @@ trait HasEmphasisBlurScope
      * Set the blur scope for the emphasis state.
      *
      * @return $this
-     * 
-     * @throws \ValueError
-     * @throws \TypeError
+     *
+     * @throws ValueError
+     * @throws TypeError
      */
     public function blurScope(string|BlurScope $value): static
     {

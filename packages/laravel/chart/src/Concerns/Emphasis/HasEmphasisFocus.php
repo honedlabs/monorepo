@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Honed\Chart\Concerns\Emphasis;
 
 use Honed\Chart\Enums\Focus;
+use TypeError;
+use ValueError;
 
 trait HasEmphasisFocus
 {
@@ -19,9 +21,9 @@ trait HasEmphasisFocus
      * Set the focus strategy for the emphasis state.
      *
      * @return $this
-     * 
-     * @throws \ValueError
-     * @throws \TypeError
+     *
+     * @throws ValueError
+     * @throws TypeError
      */
     public function focus(string|Focus $value): static
     {

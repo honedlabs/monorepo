@@ -15,8 +15,9 @@ trait HasFormatter
     protected $formatter;
 
     /**
-     * Set the formatter for the axis pointer label, the property should be a 
+     * Set the formatter for the axis pointer label, the property should be a
      * template string such as `{value} ml`
+     *
      * @return $this
      */
     public function formatter(?string $value): static

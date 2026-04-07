@@ -18,10 +18,10 @@ use Honed\Chart\Proxies\HigherOrderLineStyle;
 use Honed\Chart\Proxies\HigherOrderShadowStyle;
 
 /**
- * @property-read \Honed\Chart\Proxies\HigherOrderAxisPointerLabel<static> $label
- * @property-read \Honed\Chart\Proxies\HigherOrderLineStyle<static> $lineStyle
- * @property-read \Honed\Chart\Proxies\HigherOrderShadowStyle<static> $shadowStyle
- * @property-read \Honed\Chart\Proxies\HigherOrderLineStyle<static> $crossStyle
+ * @property-read HigherOrderAxisPointerLabel<static> $label
+ * @property-read HigherOrderLineStyle<static> $lineStyle
+ * @property-read HigherOrderShadowStyle<static> $shadowStyle
+ * @property-read HigherOrderLineStyle<static> $crossStyle
  */
 class AxisPointer extends Chartable
 {
@@ -37,7 +37,7 @@ class AxisPointer extends Chartable
 
     /**
      * Get a property of the axis pointer.
-     * 
+     *
      * @param  non-empty-string  $name
      */
     public function __get(string $name): mixed
@@ -53,7 +53,7 @@ class AxisPointer extends Chartable
 
     /**
      * Get the array representation of the axis pointer.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function representation(): array
