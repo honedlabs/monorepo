@@ -26,10 +26,10 @@ trait HasTitle
     {
         $this->titleInstance = match (true) {
             $value => $this->withTitle(),
-            ! $value => null,
             is_string($value) => $this->withTitle()->text($value),
             $value instanceof Closure => $value($this->withTitle()),
-            default => $value,
+            $value instanceof Title => $value,
+            default => null,
         };
 
         return $this;

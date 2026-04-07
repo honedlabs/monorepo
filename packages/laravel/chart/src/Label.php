@@ -10,6 +10,7 @@ use Honed\Chart\Concerns\Style\HasBorderColor;
 use Honed\Chart\Concerns\Style\HasBorderRadius;
 use Honed\Chart\Concerns\Style\HasBorderType;
 use Honed\Chart\Concerns\Style\HasBorderWidth;
+use Honed\Chart\Concerns\Style\HasColor;
 use Honed\Chart\Concerns\Style\HasDashOffset;
 use Honed\Chart\Concerns\Style\HasFontFamily;
 use Honed\Chart\Concerns\Style\HasFontSize;
@@ -23,32 +24,29 @@ use Honed\Chart\Concerns\Style\HasShadowBlur;
 use Honed\Chart\Concerns\Style\HasShadowColor;
 use Honed\Chart\Concerns\Style\HasShadowOffset;
 use Honed\Chart\Concerns\Style\HasWidth;
-use Honed\Chart\Label\Concerns\HasDistance;
-use Honed\Chart\Support\Concerns\HasRotation;
 
 class Label extends Chartable
 {
-    // use HasRotation;
     use CanBeShown;
-    // use HasBackgroundColor;
-    // use HasBorderColor;
-    // use HasBorderRadius;
-    // use HasBorderType;
-    // use HasBorderWidth;
-    // use HasDashOffset;
-    // use HasDistance;
-    // use HasFontFamily;
-    // use HasFontSize;
-    // use HasFontStyle;
-    // use HasFontWeight;
-    // use HasHeight;
-    // use HasLineHeight;
-    // use HasOverflow;
-    // use HasPadding;
-    // use HasShadowBlur;
-    // use HasShadowColor;
-    // use HasShadowOffset;
-    // use HasWidth;
+    use HasBackgroundColor;
+    use HasBorderColor;
+    use HasBorderRadius;
+    use HasBorderType;
+    use HasBorderWidth;
+    use HasColor;
+    use HasDashOffset;
+    use HasFontFamily;
+    use HasFontSize;
+    use HasFontStyle;
+    use HasFontWeight;
+    use HasHeight;
+    use HasLineHeight;
+    use HasOverflow;
+    use HasPadding;
+    use HasShadowBlur;
+    use HasShadowColor;
+    use HasShadowOffset;
+    use HasWidth;
 
     /**
      * Get the representation of the label.
@@ -59,41 +57,26 @@ class Label extends Chartable
     {
         return [
             'show' => $this->isShown(),
-            // 'position' => $this->getPosition(),
-            // 'distance' => $this->getDistance(),
-            // 'rotate' => $this->getRotation(),
-            // 'offset' => $this->getOffset(),
-            // 'minMargin' => $this->getMinMargin(),
-            // 'fontStyle' => $this->getFontStyle(),
-            // 'fontWeight' => $this->getFontWeight(),
-            // 'fontFamily' => $this->getFontFamily(),
-            // 'fontSize' => $this->getFontSize(),
-            // 'align' => $this->getAlign(),
-            // 'verticalAlign' => $this->getVerticalAlign(),
-            // 'lineHeight' => $this->getLineHeight(),
-            // 'backgroundColor' => $this->getBackgroundColor(),
-            // 'borderColor' => $this->getBorderColor(),
-            // 'borderWidth' => $this->getBorderWidth(),
-            // 'borderType' => $this->getBorderType(),
-            // 'borderDashOffset' => $this->getDashOffset(),
-            // 'padding' => $this->getPadding(),
-            // 'shadowBlur' => $this->getShadowBlur(),
-            // 'shadowColor' => $this->getShadowColor(),
-            // 'shadowOffsetX' => $this->getShadowOffsetX(),
-            // 'shadowOffsetY' => $this->getShadowOffsetY(),
-            // 'width' => $this->getWidth(),
-            // 'height' => $this->getHeight(),
-            // 'textBorderColor' => $this->getTextBorderColor(),
-            // 'textBorderWidth' => $this->getTextBorderWidth(),
-            // 'textBorderType' => $this->getTextBorderType(),
-            // 'textBorderDashOffset' => $this->getTextBorderDashOffset(),
-            // 'textBorderColor' => $this->getTextBorderColor(),
-            // 'textBorderShadowColor' => $this->getTextBorderShadowColor(),
-            // 'textBorderShadowBlur' => $this->getTextBorderShadowBlur(),
-            // 'textBorderShadowOffsetX' => $this->getTextBorderShadowOffsetX(),
-            // 'textBorderShadowOffsetY' => $this->getTextBorderShadowOffsetY(),
-            // 'overflow' => $this->getOverflow(),
-            // 'ellipsis' => $this->getEllipsis(),
+            'color' => $this->getColor(),
+            'fontStyle' => $this->getFontStyle(),
+            'fontWeight' => $this->getFontWeight(),
+            'fontFamily' => $this->getFontFamily(),
+            'fontSize' => $this->getFontSize(),
+            'lineHeight' => $this->getLineHeight(),
+            'backgroundColor' => $this->getBackgroundColor(),
+            'borderColor' => $this->getBorderColor(),
+            'borderWidth' => $this->getBorderWidth(),
+            'borderType' => $this->getBorderType(),
+            'borderDashOffset' => $this->getDashOffset(),
+            'borderRadius' => $this->getBorderRadius(),
+            'padding' => $this->getPadding(),
+            'shadowBlur' => $this->getShadowBlur(),
+            'shadowColor' => $this->getShadowColor(),
+            'shadowOffsetX' => $this->getShadowOffsetX(),
+            'shadowOffsetY' => $this->getShadowOffsetY(),
+            'width' => $this->getWidth(),
+            'height' => $this->getHeight(),
+            'overflow' => $this->getOverflow(),
         ];
     }
 }

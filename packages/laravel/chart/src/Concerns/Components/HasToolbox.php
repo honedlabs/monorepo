@@ -26,9 +26,9 @@ trait HasToolbox
     {
         $this->toolboxInstance = match (true) {
             $value => $this->withToolbox(),
-            ! $value => null,
             $value instanceof Closure => $value($this->withToolbox()),
-            default => $value,
+            $value instanceof Toolbox => $value,
+            default => null,
         };
 
         return $this;

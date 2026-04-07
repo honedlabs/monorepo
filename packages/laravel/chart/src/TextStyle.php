@@ -27,7 +27,6 @@ class TextStyle extends Chartable
     use HasBorderWidth;
     use HasColor;
     use HasFontFamily;
-    use HasFontFamily;
     use HasFontSize;
     use HasFontStyle;
     use HasFontWeight;

@@ -25,10 +25,10 @@ trait HasLineStyle
     public function lineStyle(LineStyle|Closure|bool|null $value = true): static
     {
         $this->lineStyleInstance = match (true) {
-            $value => $this->withLineStyle(),
-            ! $value => null,
             $value instanceof Closure => $value($this->withLineStyle()),
-            default => $value,
+            $value instanceof LineStyle => $value,
+            $value => $this->withLineStyle(),
+            default => null,
         };
 
         return $this;

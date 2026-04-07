@@ -8,13 +8,25 @@ use Honed\Chart\Concerns\CanBeShown;
 use Honed\Chart\Concerns\Components\HasTextStyle;
 use Honed\Chart\Concerns\HasId;
 use Honed\Chart\Concerns\Proxies\Proxyable;
+use Honed\Chart\Concerns\Style\HasBottom;
+use Honed\Chart\Concerns\Style\HasLeft;
+use Honed\Chart\Concerns\Style\HasRight;
+use Honed\Chart\Concerns\Style\HasTop;
+use Honed\Chart\Concerns\Style\HasZ;
+use Honed\Chart\Concerns\Style\HasZLevel;
 use Honed\Chart\Proxies\HigherOrderTextStyle;
 
 class Title extends Chartable
 {
     use CanBeShown;
+    use HasBottom;
     use HasId;
+    use HasLeft;
+    use HasRight;
     use HasTextStyle;
+    use HasTop;
+    use HasZ;
+    use HasZLevel;
     use Proxyable;
 
     /**
@@ -67,29 +79,12 @@ class Title extends Chartable
             // 'link' => $this->getLink(),
             // 'target' => $this->getTarget(),
             'textStyle' => $this->getTextStyle()?->toArray(),
-            // 'subtext' => $this->getSubtext(),
-            // 'sublink' => $this->getSublink(),
-            // 'subtarget' => $this->getSubtarget(),
-            // 'subtextStyle' => $this->getSubtextStyle()?->toArray(),
-            // 'textAlign' => $this->getAlign(),
-            // 'textVerticalAlign' => $this->getVerticalAlign(),
-            // 'triggerEvent' => $this->isTriggerable() ?: null,
-            // 'padding' => $this->getPadding(),
-            // 'itemGap' => $this->getItemGap(),
-            // 'zLevel' => $this->getZLevel(),
-            // 'z' => $this->getZ(),
-            // 'left' => $this->getLeft(),
-            // 'top' => $this->getTop(),
-            // 'right' => $this->getRight(),
-            // 'bottom' => $this->getBottom(),
-            // 'backgroundColor' => $this->getBackgroundColor(),
-            // 'borderColor' => $this->getBorderColor(),
-            // 'borderWidth' => $this->getBorderWidth(),
-            // 'borderRadius' => $this->getBorderRadius(),
-            // 'shadowBlur' => $this->getShadowBlur(),
-            // 'shadowColor' => $this->getShadowColor(),
-            // 'shadowOffsetX' => $this->getShadowOffsetX(),
-            // 'shadowOffsetY' => $this->getShadowOffsetY(),
+            'zlevel' => $this->getZLevel(),
+            'z' => $this->getZ(),
+            'left' => $this->getLeft(),
+            'top' => $this->getTop(),
+            'right' => $this->getRight(),
+            'bottom' => $this->getBottom(),
         ];
     }
 }

@@ -24,9 +24,9 @@ trait HasGrid
     {
         $this->gridInstance = match (true) {
             $value => $this->withGrid(),
-            ! $value => null,
             $value instanceof Closure => $value($this->withGrid()),
-            default => $value,
+            $value instanceof Grid => $value,
+            default => null,
         };
 
         return $this;

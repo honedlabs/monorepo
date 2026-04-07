@@ -26,9 +26,9 @@ trait HasTooltip
     {
         $this->tooltipInstance = match (true) {
             $value => $this->withTooltip(),
-            ! $value => null,
             $value instanceof Closure => $value($this->withTooltip()),
-            default => $value,
+            $value instanceof Tooltip => $value,
+            default => null,
         };
 
         return $this;

@@ -7,43 +7,39 @@ namespace Honed\Chart;
 use Honed\Chart\Concerns\CanBeShown;
 use Honed\Chart\Concerns\HasId;
 use Honed\Chart\Concerns\Proxies\Proxyable;
+use Honed\Chart\Concerns\Style\HasBottom;
+use Honed\Chart\Concerns\Style\HasHeight;
+use Honed\Chart\Concerns\Style\HasInactiveBorderColor;
+use Honed\Chart\Concerns\Style\HasInactiveColor;
+use Honed\Chart\Concerns\Style\HasInactiveWidth;
+use Honed\Chart\Concerns\Style\HasLeft;
+use Honed\Chart\Concerns\Style\HasPadding;
+use Honed\Chart\Concerns\Style\HasRight;
+use Honed\Chart\Concerns\Style\HasTop;
+use Honed\Chart\Concerns\Style\HasWidth;
+use Honed\Chart\Concerns\Style\HasZ;
+use Honed\Chart\Concerns\Style\HasZLevel;
 use Honed\Chart\Enums\LegendType;
 use TypeError;
 use ValueError;
 
 class Legend extends Chartable
 {
-    // use HasRotation;
     use CanBeShown;
-    // use HasBackgroundColor;
-    // use HasBorderColor;
-    // use HasBorderRadius;
-    // use HasBorderWidth;
-    // use HasBottom;
-    // use HasHeight;
+    use HasBottom;
+    use HasHeight;
     use HasId;
-
+    use HasInactiveBorderColor;
+    use HasInactiveColor;
+    use HasInactiveWidth;
+    use HasLeft;
+    use HasPadding;
+    use HasRight;
+    use HasTop;
+    use HasWidth;
+    use HasZ;
+    use HasZLevel;
     use Proxyable;
-    // use HasInactiveBorderColor;
-    // use HasInactiveColor;
-    // use HasInactiveWidth;
-    // use HasItemGap;
-    // use HasItemHeight;
-    // use HasItemStyle;
-    // use HasItemWidth;
-    // use HasLeft;
-    // use HasLineStyle;
-    // use HasOrientation;
-    // use HasPadding;
-    // use HasRight;
-    // use HasShadowBlur;
-    // use HasShadowColor;
-    // use HasShadowOffset;
-    // use HasTextStyle;
-    // use HasTooltip;
-    // use HasTop;
-    // use HasWidth;
-    // use HasZAxis;
 
     /**
      * The type of legend.
@@ -154,41 +150,19 @@ class Legend extends Chartable
             'type' => $this->getType()?->value,
             'id' => $this->getId(),
             'show' => $this->isShown(),
-            // 'zLevel' => $this->getZLevel(),
-            // 'z' => $this->getZ(),
-            // 'left' => $this->getLeft(),
-            // 'top' => $this->getTop(),
-            // 'right' => $this->getRight(),
-            // 'bottom' => $this->getBottom(),
-            // 'width' => $this->getWidth(),
-            // 'height' => $this->getHeight(),
-            // 'orient' => $this->getOrientation(),
-            // 'align' => $this->getAlign(),
-            // 'padding' => $this->getPadding(),
-            // 'itemGap' => $this->getItemGap(),
-            // 'itemWidth' => $this->getItemWidth(),
-            // 'itemHeight' => $this->getItemHeight(),
-            // 'itemStyle' => $this->getItemStyle()?->toArray(),
-            // 'lineStyle' => $this->getLineStyle()?->toArray(),
-            // 'symbolRotate' => $this->getRotation(),
-            // 'selectedMode' => $this->getSelectedMode(),
+            'zlevel' => $this->getZLevel(),
+            'z' => $this->getZ(),
+            'left' => $this->getLeft(),
+            'top' => $this->getTop(),
+            'right' => $this->getRight(),
+            'bottom' => $this->getBottom(),
+            'width' => $this->getWidth(),
+            'height' => $this->getHeight(),
+            'padding' => $this->getPadding(),
             'data' => $this->getLabels(),
-            // 'inactiveColor' => $this->getInactiveColor(),
-            // 'inactiveBorderColor' => $this->getInactiveBorderColor(),
-            // 'inactiveBorderWidth' => $this->getInactiveWidth(),
-            // 'textStyle' => $this->getTextStyle()?->toArray(),
-            // 'tooltip' => $this->getTooltip()?->toArray(),
-            // 'backgroundColor' => $this->getBackgroundColor(),
-            // 'borderColor' => $this->getBorderColor(),
-            // 'borderWidth' => $this->getBorderWidth(),
-            // 'borderRadius' => $this->getBorderRadius(),
-            // 'shadowBlur' => $this->getShadowBlur(),
-            // 'shadowColor' => $this->getShadowColor(),
-            // 'shadowOffsetX' => $this->getShadowOffsetX(),
-            // 'shadowOffsetY' => $this->getShadowOffsetY(),
-            // 'animation' => $this->isAnimatable(),
-            // 'animationDurationUpdate' => $this->getAnimationDurationUpdate(),
-            // 'emphasis' => $this->getEmphasis()?->toArray(),
+            'inactiveColor' => $this->getInactiveColor(),
+            'inactiveBorderColor' => $this->getInactiveBorderColor(),
+            'inactiveBorderWidth' => $this->getInactiveWidth(),
         ];
     }
 }

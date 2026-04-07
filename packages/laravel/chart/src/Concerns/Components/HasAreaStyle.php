@@ -26,9 +26,9 @@ trait HasAreaStyle
     {
         $this->areaStyleInstance = match (true) {
             $value => $this->withAreaStyle(),
-            ! $value => null,
             $value instanceof Closure => $value($this->withAreaStyle()),
-            default => $value,
+            $value instanceof AreaStyle => $value,
+            default => null,
         };
 
         return $this;

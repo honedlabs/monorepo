@@ -8,5 +8,6 @@ enum AxisPointerType: string
 {
     case Line = 'line';
     case Shadow = 'shadow';
+    case Cross = 'cross';
     case None = 'none';
 }

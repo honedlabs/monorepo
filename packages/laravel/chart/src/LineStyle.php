@@ -8,6 +8,8 @@ use Honed\Chart\Concerns\Style\HasBorderType;
 use Honed\Chart\Concerns\Style\HasCap;
 use Honed\Chart\Concerns\Style\HasColor;
 use Honed\Chart\Concerns\Style\HasDashOffset;
+use Honed\Chart\Concerns\Style\HasInactiveColor;
+use Honed\Chart\Concerns\Style\HasInactiveWidth;
 use Honed\Chart\Concerns\Style\HasJoin;
 use Honed\Chart\Concerns\Style\HasOpacity;
 use Honed\Chart\Concerns\Style\HasShadowBlur;
@@ -21,6 +23,8 @@ class LineStyle extends Chartable
     use HasCap;
     use HasColor;
     use HasDashOffset;
+    use HasInactiveColor;
+    use HasInactiveWidth;
     use HasJoin;
     use HasOpacity;
     use HasShadowBlur;
@@ -48,8 +52,8 @@ class LineStyle extends Chartable
             'shadowOffsetX' => $this->getShadowOffsetX(),
             'shadowOffsetY' => $this->getShadowOffsetY(),
             'opacity' => $this->getOpacity(),
-            // 'inactiveColor' => $this->getInactiveColor(),
-            // 'inactiveWidth' => $this->getInactiveWidth(),
+            'inactiveColor' => $this->getInactiveColor(),
+            'inactiveWidth' => $this->getInactiveWidth(),
         ];
     }
 }

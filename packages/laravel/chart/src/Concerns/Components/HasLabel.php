@@ -25,11 +25,10 @@ trait HasLabel
     public function label(Label|Closure|bool|null $value = true): static
     {
         $this->labelInstance = match (true) {
-            $value => $value,
-            ! $value => null,
-            is_null($value) => $this->withLabel(),
+            $value => $this->withLabel(),
             $value instanceof Closure => $value($this->withLabel()),
-            default => $value,
+            $value instanceof Label => $value,
+            default => null,
         };
 
         return $this;

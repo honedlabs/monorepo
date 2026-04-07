@@ -26,9 +26,9 @@ trait HasItemStyle
     {
         $this->itemStyleInstance = match (true) {
             $value => $this->withItemStyle(),
-            ! $value => null,
             $value instanceof Closure => $value($this->withItemStyle()),
-            default => $value,
+            $value instanceof ItemStyle => $value,
+            default => null,
         };
 
         return $this;
