@@ -12,11 +12,15 @@ trait HasAxisPointerAnimation
     protected $pointerAnimation;
 
     /**
+     * Duration (ms) for pointer position updates when the axis scale or layout changes.
+     *
      * @var int|float|null
      */
     protected $animationDurationUpdate;
 
     /**
+     * Enable or disable axis pointer animation.
+     *
      * @return $this
      */
     public function pointerAnimation(bool $value = true): static
@@ -26,6 +30,9 @@ trait HasAxisPointerAnimation
         return $this;
     }
 
+    /**
+     * Whether axis pointer animation is enabled.
+     */
     public function getPointerAnimation(): ?bool
     {
         return $this->pointerAnimation;
@@ -41,6 +48,9 @@ trait HasAxisPointerAnimation
         return $this;
     }
 
+    /**
+     * @return int|float|null
+     */
     public function getAnimationDurationUpdate(): int|float|null
     {
         return $this->animationDurationUpdate;

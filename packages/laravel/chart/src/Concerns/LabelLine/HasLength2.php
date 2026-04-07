@@ -7,11 +7,15 @@ namespace Honed\Chart\Concerns\LabelLine;
 trait HasLength2
 {
     /**
+     * The length of the label line at the end.
+     *
      * @var int|float|null
      */
     protected $length2;
 
     /**
+     * Set the length of the label line at the end.
+     *
      * @return $this
      */
     public function length2(int|float|null $value): static
@@ -22,6 +26,8 @@ trait HasLength2
     }
 
     /**
+     * Get the length of the label line at the end.
+     *
      * @return int|float|null
      */
     public function getLength2(): int|float|null

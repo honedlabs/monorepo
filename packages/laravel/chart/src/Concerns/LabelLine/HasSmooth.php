@@ -7,11 +7,15 @@ namespace Honed\Chart\Concerns\LabelLine;
 trait HasSmooth
 {
     /**
+     * Whether the label line is drawn with a smooth curve.
+     *
      * @var bool|null
      */
     protected $smooth;
 
     /**
+     * Set whether the label line is drawn with a smooth curve.
+     *
      * @return $this
      */
     public function smooth(bool $value = true): static
@@ -21,6 +25,11 @@ trait HasSmooth
         return $this;
     }
 
+    /**
+     * Get whether the label line is drawn with a smooth curve.
+     *
+     * @return bool|null
+     */
     public function getSmooth(): ?bool
     {
         return $this->smooth;

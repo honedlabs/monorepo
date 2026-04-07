@@ -30,11 +30,17 @@ trait HasLabelLine
         return $this;
     }
 
+    /**
+     * Get the configured label line instance.
+     */
     public function getLabelLine(): ?LabelLine
     {
         return $this->labelLineInstance;
     }
 
+    /**
+     * Lazily create the label line used by closures and fluent children.
+     */
     protected function withLabelLine(): LabelLine
     {
         return $this->labelLineInstance ??= LabelLine::make();

@@ -61,7 +61,6 @@ class Line extends Series
             // 'labelLayout' => $this->getLabelLayout()?->toArray(),
             // 'itemStyle' => $this->getItemStyle()?->toArray(),
             'areaStyle' => $this->getAreaStyle()?->toArray(),
-            // 'emphasis' => $this->getEmphasis()?->toArray(),
             // 'blur' => $this->getBlur()?->toArray(),
             // 'select' => $this->getSelect()?->toArray(),
             // 'selectedMode' => $this->getSelectedMode(),

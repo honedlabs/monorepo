@@ -12,7 +12,7 @@ use Honed\Chart\Concerns\Emphasis\HasDisabled;
 use Honed\Chart\Concerns\Emphasis\HasEmphasisBlurScope;
 use Honed\Chart\Concerns\Emphasis\HasEmphasisFocus;
 use Honed\Chart\Concerns\Emphasis\HasScale;
-use Honed\Chart\Concerns\HasLabel;
+use Honed\Chart\Concerns\Components\HasLabel;
 use Honed\Chart\Concerns\Proxies\Proxyable;
 use Honed\Chart\Proxies\HigherOrderAreaStyle;
 use Honed\Chart\Proxies\HigherOrderItemStyle;
@@ -20,6 +20,13 @@ use Honed\Chart\Proxies\HigherOrderLabel;
 use Honed\Chart\Proxies\HigherOrderLabelLine;
 use Honed\Chart\Proxies\HigherOrderLineStyle;
 
+/**
+ * @property-read \Honed\Chart\Proxies\HigherOrderLabel<static> $label
+ * @property-read \Honed\Chart\Proxies\HigherOrderLabelLine<static> $labelLine
+ * @property-read \Honed\Chart\Proxies\HigherOrderItemStyle<static> $itemStyle
+ * @property-read \Honed\Chart\Proxies\HigherOrderLineStyle<static> $lineStyle
+ * @property-read \Honed\Chart\Proxies\HigherOrderAreaStyle<static> $areaStyle
+ */
 class Emphasis extends Chartable
 {
     use HasAreaStyle;
@@ -33,6 +40,11 @@ class Emphasis extends Chartable
     use HasScale;
     use Proxyable;
 
+    /**
+     * Get a property of the emphasis.
+     *
+     * @param  non-empty-string  $name
+     */
     public function __get(string $name): mixed
     {
         return match ($name) {
@@ -46,6 +58,8 @@ class Emphasis extends Chartable
     }
 
     /**
+     * Get the array representation of the emphasis.
+     * 
      * @return array<string, mixed>
      */
     protected function representation(): array

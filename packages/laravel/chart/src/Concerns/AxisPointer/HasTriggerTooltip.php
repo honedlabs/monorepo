@@ -12,6 +12,8 @@ trait HasTriggerTooltip
     protected $triggerTooltip;
 
     /**
+     * Enable or disable tooltip updates when the pointer moves.
+     *
      * @return $this
      */
     public function triggerTooltip(bool $value = true): static
@@ -21,6 +23,9 @@ trait HasTriggerTooltip
         return $this;
     }
 
+    /**
+     * Whether the pointer triggers the tooltip.
+     */
     public function getTriggerTooltip(): ?bool
     {
         return $this->triggerTooltip;

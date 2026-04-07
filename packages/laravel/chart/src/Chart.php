@@ -60,6 +60,8 @@ class Chart extends Chartable implements Resolvable
 
     /**
      * Get a property of the chart.
+     * 
+     * @param  non-empty-string  $name
      */
     public function __get(string $name): mixed
     {

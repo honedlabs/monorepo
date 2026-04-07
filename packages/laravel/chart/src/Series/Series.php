@@ -6,6 +6,7 @@ namespace Honed\Chart\Series;
 
 use Honed\Chart\Chart;
 use Honed\Chart\Chartable;
+use Honed\Chart\Concerns\Components\HasEmphasis;
 use Honed\Chart\Concerns\Components\HasTooltip;
 use Honed\Chart\Concerns\HasId;
 use Honed\Chart\Concerns\InteractsWithData;
@@ -14,16 +15,22 @@ use Honed\Chart\Concerns\Style\HasCursor;
 use Honed\Chart\Concerns\Support\Inferrable;
 use Honed\Chart\Contracts\Resolvable;
 use Honed\Chart\Enums\ChartType;
+use Honed\Chart\Proxies\HigherOrderEmphasis;
 use Honed\Chart\Proxies\HigherOrderTooltip;
 use Honed\Core\Concerns\HasName;
 use Illuminate\Support\Traits\ForwardsCalls;
 use TypeError;
 use ValueError;
 
+/**
+ * @property-read \Honed\Chart\Proxies\HigherOrderEmphasis<static> $emphasis
+ * @property-read \Honed\Chart\Proxies\HigherOrderTooltip<static> $tooltip
+ */
 abstract class Series extends Chartable implements Resolvable
 {
     use ForwardsCalls;
     use HasCursor;
+    use HasEmphasis;
     use HasId;
     use HasName;
     use HasTooltip;
@@ -38,9 +45,15 @@ abstract class Series extends Chartable implements Resolvable
      */
     public $type;
 
+    /**
+     * Get a property of the series.
+     * 
+     * @param  non-empty-string  $name
+     */
     public function __get(string $name): mixed
     {
         return match ($name) {
+            'emphasis' => new HigherOrderEmphasis($this, $this->withEmphasis()),
             'tooltip' => new HigherOrderTooltip($this, $this->withTooltip()),
             default => $this->defaultGet($name),
         };
@@ -127,6 +140,7 @@ abstract class Series extends Chartable implements Resolvable
             'name' => isset($this->name) ? $this->getName() : null, // @phpstan-ignore-line
             'data' => $this->getData(),
             'cursor' => $this->getCursor(),
+            'emphasis' => $this->getEmphasis()?->toArray(),
             // 'clip' => $this->isClipped() ? null : false,
             // ...$this->getZAxisParameters(),
         ];

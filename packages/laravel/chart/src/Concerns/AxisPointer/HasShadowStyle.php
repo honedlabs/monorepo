@@ -15,6 +15,8 @@ trait HasShadowStyle
     protected $axisPointerShadowStyle;
 
     /**
+     * Set the shadow style for the axis pointer.
+     * 
      * @param  ShadowStyle|(Closure(ShadowStyle): ShadowStyle)|bool|null  $value
      * @return $this
      */
@@ -30,11 +32,17 @@ trait HasShadowStyle
         return $this;
     }
 
+    /**
+     * Shadow style for the shadow pointer (if configured).
+     */
     public function getAxisPointerShadowStyle(): ?ShadowStyle
     {
         return $this->axisPointerShadowStyle;
     }
 
+    /**
+     * Resolve or create the shadow style instance.
+     */
     protected function withAxisPointerShadowStyle(): ShadowStyle
     {
         return $this->axisPointerShadowStyle ??= ShadowStyle::make();

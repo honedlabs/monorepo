@@ -30,11 +30,17 @@ trait HasPointerLabel
         return $this;
     }
 
+    /**
+     * Get the axis pointer label configuration.
+     */
     public function getAxisPointerLabel(): ?AxisPointerLabel
     {
         return $this->axisPointerLabelInstance;
     }
 
+    /**
+     * Resolve the label instance for nested configuration.
+     */
     protected function withAxisPointerLabel(): AxisPointerLabel
     {
         return $this->axisPointerLabelInstance ??= AxisPointerLabel::make();

@@ -2,36 +2,22 @@
 
 declare(strict_types=1);
 
-use Honed\Chart\Chartable;
+use Honed\Chart\Emphasis;
 use Honed\Chart\Label;
 
-beforeAll(function () {
-    if (! trait_exists(Honed\Chart\Concerns\HasLabel::class, false)) {
-        require_once dirname(__DIR__, 4).'/src/Concerns/Components/HasLabel.php';
-    }
-});
-
 beforeEach(function () {
-    $this->fixture = new class() extends Chartable
-    {
-        use Honed\Chart\Concerns\HasLabel;
-
-        protected function representation(): array
-        {
-            return [];
-        }
-    };
+    $this->emphasis = Emphasis::make();
 });
 
 it('can have label', function () {
-    expect($this->fixture)
+    expect($this->emphasis)
         ->getLabel()->toBeNull()
-        ->label(false)->toBe($this->fixture)
+        ->label(false)->toBe($this->emphasis)
         ->getLabel()->toBeNull()
-        ->label(fn (Label $label) => $label)->toBe($this->fixture)
+        ->label(fn (Label $label) => $label)->toBe($this->emphasis)
         ->getLabel()->toBeInstanceOf(Label::class)
-        ->label(null)->toBe($this->fixture)
+        ->label(null)->toBe($this->emphasis)
         ->getLabel()->toBeNull()
-        ->label(Label::make())->toBe($this->fixture)
+        ->label(Label::make())->toBe($this->emphasis)
         ->getLabel()->toBeInstanceOf(Label::class);
 });

@@ -14,7 +14,12 @@ trait HasAxisPointerType
     protected $axisPointerType;
 
     /**
+     * Set how the axis pointer is rendered.
+     *
      * @return $this
+     *
+     * @throws \ValueError
+     * @throws \TypeError
      */
     public function type(string|AxisPointerType $value): static
     {
@@ -23,6 +28,9 @@ trait HasAxisPointerType
         return $this;
     }
 
+    /**
+     * Get the axis pointer type.
+     */
     public function getAxisPointerType(): ?AxisPointerType
     {
         return $this->axisPointerType;

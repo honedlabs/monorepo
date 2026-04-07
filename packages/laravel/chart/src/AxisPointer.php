@@ -17,6 +17,12 @@ use Honed\Chart\Proxies\HigherOrderAxisPointerLabel;
 use Honed\Chart\Proxies\HigherOrderLineStyle;
 use Honed\Chart\Proxies\HigherOrderShadowStyle;
 
+/**
+ * @property-read \Honed\Chart\Proxies\HigherOrderAxisPointerLabel<static> $label
+ * @property-read \Honed\Chart\Proxies\HigherOrderLineStyle<static> $lineStyle
+ * @property-read \Honed\Chart\Proxies\HigherOrderShadowStyle<static> $shadowStyle
+ * @property-read \Honed\Chart\Proxies\HigherOrderLineStyle<static> $crossStyle
+ */
 class AxisPointer extends Chartable
 {
     use HasAxisPointerAnimation;
@@ -29,6 +35,11 @@ class AxisPointer extends Chartable
     use HasTriggerTooltip;
     use Proxyable;
 
+    /**
+     * Get a property of the axis pointer.
+     * 
+     * @param  non-empty-string  $name
+     */
     public function __get(string $name): mixed
     {
         return match ($name) {
@@ -41,6 +52,8 @@ class AxisPointer extends Chartable
     }
 
     /**
+     * Get the array representation of the axis pointer.
+     * 
      * @return array<string, mixed>
      */
     protected function representation(): array

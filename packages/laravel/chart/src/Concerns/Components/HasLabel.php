@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Chart\Concerns;
+namespace Honed\Chart\Concerns\Components;
 
 use Closure;
 use Honed\Chart\Label;

@@ -9,7 +9,12 @@ use Honed\Chart\Concerns\Components\HasLineStyle;
 use Honed\Chart\Concerns\LabelLine\HasLength;
 use Honed\Chart\Concerns\LabelLine\HasLength2;
 use Honed\Chart\Concerns\LabelLine\HasSmooth;
+use Honed\Chart\Concerns\Proxies\Proxyable;
+use Honed\Chart\Proxies\HigherOrderLineStyle;
 
+/**
+ * @property-read \Honed\Chart\Proxies\HigherOrderLineStyle<static> $lineStyle
+ */
 class LabelLine extends Chartable
 {
     use CanBeShown;
@@ -17,8 +22,24 @@ class LabelLine extends Chartable
     use HasLength2;
     use HasLineStyle;
     use HasSmooth;
+    use Proxyable;
 
     /**
+     * Get a property of the label line.
+     * 
+     * @param  non-empty-string  $name
+     */
+    public function __get(string $name): mixed
+    {
+        return match ($name) {
+            'lineStyle' => new HigherOrderLineStyle($this, $this->withLineStyle()),
+            default => $this->defaultGet($name),
+        };
+    }
+
+    /**
+     * Get the array representation of the label line.
+     * 
      * @return array<string, mixed>
      */
     protected function representation(): array

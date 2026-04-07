@@ -15,8 +15,8 @@ trait HasCrossStyle
     protected $crossStyleInstance;
 
     /**
-     * Set the cross style.
-     * 
+     * Set the style of the axis pointer cross lines (when `type` is `cross`).
+     *
      * @param  LineStyle|(Closure(LineStyle): LineStyle)|bool|null  $value
      * @return $this
      */

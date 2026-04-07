@@ -12,6 +12,8 @@ trait HasSnap
     protected $snap;
 
     /**
+     * Enable or disable snap-to-tick.
+     *
      * @return $this
      */
     public function snap(bool $value = true): static
@@ -21,6 +23,9 @@ trait HasSnap
         return $this;
     }
 
+    /**
+     * Whether snap-to-tick is enabled.
+     */
     public function getSnap(): ?bool
     {
         return $this->snap;
