@@ -19,7 +19,7 @@ jobs:
           # - action
           # - billing
           # - bind
-          # - chart
+          - chart
           # - command
           # - core
           # - crumb
@@ -38,11 +38,11 @@ jobs:
           # - option
           # - page
           # - persist
-          - refine
+          # - refine
           # - registry
           # - scaffold
           # - stats
-          - table
+          # - table
           # - upload
           # - widget
     steps:
