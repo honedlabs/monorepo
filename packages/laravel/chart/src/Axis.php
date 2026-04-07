@@ -6,6 +6,7 @@ namespace Honed\Chart;
 
 use DateTimeImmutable;
 use Honed\Chart\Concerns\Axis\HasAxisType;
+use Honed\Chart\Concerns\Axis\HasDimension;
 use Honed\Chart\Concerns\CanBeShown;
 use Honed\Chart\Concerns\Components\HasTooltip;
 use Honed\Chart\Concerns\HasId;
@@ -13,7 +14,6 @@ use Honed\Chart\Concerns\InteractsWithData;
 use Honed\Chart\Concerns\Support\Inferrable;
 use Honed\Chart\Contracts\Resolvable;
 use Honed\Chart\Enums\AxisType;
-use Honed\Chart\Enums\Dimension;
 use Illuminate\Support\Traits\ForwardsCalls;
 
 class Axis extends Chartable implements Resolvable
@@ -21,56 +21,41 @@ class Axis extends Chartable implements Resolvable
     use CanBeShown;
     use ForwardsCalls;
     use HasAxisType;
+    use HasDimension;
     use HasId;
     use HasTooltip;
     use Inferrable;
     use InteractsWithData;
 
     /**
-     * Set the dimension of the axis.
+     * Indicate whether the data should be generated for the axis.
      *
-     * @var ?Dimension
+     * @var bool
      */
-    protected $dimension;
+    protected $generate = true;
 
     /**
-     * Set the dimension of the axis.
+     * Set whether the data should be generated for the axis.
+     *
+     * @internal
      *
      * @return $this
      */
-    public function dimension(Dimension|string $value): static
+    public function generate(bool $value = true): static
     {
-        $this->dimension = is_string($value) ? Dimension::from($value) : $value;
+        $this->generate = $value;
 
         return $this;
     }
 
     /**
-     * Set the dimension of the axis to be x.
+     * Determine whether the data should be generated for the axis.
      *
-     * @return $this
+     * @internal
      */
-    public function x(): static
+    public function shouldGenerate(): bool
     {
-        return $this->dimension(Dimension::X);
-    }
-
-    /**
-     * Set the dimension of the axis to be y.
-     *
-     * @return $this
-     */
-    public function y(): static
-    {
-        return $this->dimension(Dimension::Y);
-    }
-
-    /**
-     * Get the dimension of the axis.
-     */
-    public function getDimension(): ?Dimension
-    {
-        return $this->dimension;
+        return $this->generate;
     }
 
     /**
@@ -96,7 +81,9 @@ class Axis extends Chartable implements Resolvable
             $this->inferType($data);
         }
 
-        $this->data($data);
+        if ($this->shouldGenerate()) {
+            $this->data($data);
+        }
     }
 
     /**

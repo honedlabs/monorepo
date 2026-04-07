@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Concerns\Components;
 
+use Honed\Chart\Enums\ChartType;
 use Honed\Chart\Series\Series;
 use Illuminate\Support\Collection;
 
@@ -46,13 +47,17 @@ trait HasSeries
     }
 
     /**
-     * Determine if the series requires axes to be provided.
+     * Determine if the chart has a series of the given type.
      */
-    public function requiresAxes(): bool
+    public function hasSeries(?ChartType $type = null): bool
     {
+        if (is_null($type)) {
+            return $this->getSeries()->isNotEmpty();
+        }
+
         return $this->getSeries()
             ->contains(
-                static fn (Series $series) => $series->requiresAxes()
+                static fn (Series $series) => $series->getType() === $type
             );
     }
 

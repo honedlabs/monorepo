@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Chart\Enums\Trigger;
 use Honed\Chart\Series\Bar;
-use Honed\Chart\Tooltip;
 use Illuminate\Support\Arr;
 
 beforeEach(function () {
@@ -40,12 +38,12 @@ beforeEach(function () {
     $this->data = array_map(
         static fn ($day, $value) => [
             'day' => $day,
-            'value' => $value
+            'value' => $value,
         ],
         Arr::get($this->expected, 'xAxis.0.data'),
         Arr::get($this->expected, 'series.0.data')
     );
-})->only();
+});
 
 it('is replicable', function () {
     $chart = Bar::make()
@@ -56,5 +54,5 @@ it('is replicable', function () {
         ->toChart()
         ->tooltip->triggerByAxis();
 
-    expect($chart->toArray())->dd()->toEqual($this->expected);
+    expect($chart->toArray())->toEqual($this->expected);
 });

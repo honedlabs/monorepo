@@ -12,8 +12,10 @@ use Honed\Chart\Concerns\Components\HasTitle;
 use Honed\Chart\Concerns\Components\HasToolbox;
 use Honed\Chart\Concerns\Components\HasTooltip;
 use Honed\Chart\Concerns\InteractsWithData;
+use Honed\Chart\Concerns\Proxies\ProxiesCalls;
 use Honed\Chart\Concerns\Support\Inferrable;
 use Honed\Chart\Contracts\Resolvable;
+use Honed\Chart\Enums\ChartType;
 use Honed\Chart\Enums\Dimension;
 use Honed\Chart\Proxies\HigherOrderTooltip;
 use Illuminate\Support\Traits\ForwardsCalls;
@@ -33,25 +35,23 @@ class Chart extends Chartable implements Resolvable
     use HasTooltip;
     use Inferrable;
     use InteractsWithData;
+    use ProxiesCalls;
 
     /**
      * Whether to flip the x and y axes, only applicable to bar charts.
      *
      * @var bool
      */
-    public $flip = false;
+    protected $flip = false;
 
     /**
      * Get a property of the chart.
-     *
-     * @param  string  $name
-     * @return mixed
      */
     public function __get(string $name): mixed
     {
         return match ($name) {
             'tooltip' => new HigherOrderTooltip($this, $this->withTooltip()),
-            default => $this->{$name}
+            default => $this->defaultGet($name),
         };
     }
 
@@ -104,7 +104,7 @@ class Chart extends Chartable implements Resolvable
      */
     protected function resolveAxes(mixed $data): void
     {
-        if (! $this->requiresAxes()) {
+        if ($this->hasSeries(ChartType::Pie)) {
             return;
         }
 
@@ -115,11 +115,18 @@ class Chart extends Chartable implements Resolvable
         foreach ($this->getAxes() as $axis) {
             $dependent = $this->isFlipped() ? Dimension::Y : Dimension::X;
 
-            if ($axis->getDimension() === $dependent && is_null($axis->getCategory())) {
-                $axis->category($this->getCategory());
+            // dd($this->getCategory(), $this->getValue());
+            if (! $axis->hasCategory()) {
+                $axis->category(
+                    $axis->getDimension()->is($dependent)
+                        ? $this->getCategory()
+                        : $this->getValue()
+                );
             }
 
-            $axis->infer($this->infers())->resolve($data);
+            $axis->generate($axis->getDimension()->is($dependent))
+                ->infer($this->infers() || $axis->infers())
+                ->resolve($data);
         }
     }
 
@@ -134,12 +141,14 @@ class Chart extends Chartable implements Resolvable
 
         $this->resolve($this->getSource() ?? []);
 
+        $isPie = $this->hasSeries(ChartType::Pie);
+
         return [
             'title' => $this->getTitle()?->toArray(),
             'legend' => $this->getLegend()?->toArray(),
             // 'grid' => $this->getGrid()?->toArray(),
-            'xAxis' => $this->listAxes(Dimension::X),
-            'yAxis' => $this->listAxes(Dimension::Y),
+            'xAxis' => $isPie ? null : $this->listAxes(Dimension::X),
+            'yAxis' => $isPie ? null : $this->listAxes(Dimension::Y),
             // 'radiusAxis' => $this->getRadiusAxis()?->toArray(),
             // 'angleAxis' => $this->getAngleAxis()?->toArray(),
             // 'radar' => $this->getRadar()?->toArray(),

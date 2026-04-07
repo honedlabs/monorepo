@@ -27,7 +27,6 @@ it('has type', function () {
 
 it('has dimension', function () {
     expect($this->axis)
-        ->getDimension()->toBeNull()
         ->x()->toBe($this->axis)
         ->getDimension()->toBe(Dimension::X)
         ->y()->toBe($this->axis)

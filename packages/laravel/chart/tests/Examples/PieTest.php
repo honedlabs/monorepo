@@ -74,6 +74,5 @@ it('creates', function () {
     // ->legend->vertical()
     // ->legend->left('left');
 
-    expect($chart->toArray())
-        ->toEqual($this->expected);
+    expect($chart->toArray())->toEqual($this->expected);
 });

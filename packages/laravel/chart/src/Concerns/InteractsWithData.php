@@ -97,6 +97,14 @@ trait InteractsWithData
     }
 
     /**
+     * Determine whether a category has been set.
+     */
+    public function hasCategory(): bool
+    {
+        return isset($this->category);
+    }
+
+    /**
      * Set how the value should be determined.
      *
      * @param  string|(Closure():mixed)|null  $value
@@ -116,6 +124,14 @@ trait InteractsWithData
     public function getValue(): string|Closure|null
     {
         return $this->value;
+    }
+
+    /**
+     * Determine whether a value has been set.
+     */
+    public function hasValue(): bool
+    {
+        return isset($this->value);
     }
 
     /**

@@ -64,8 +64,12 @@ it('is replicable', function () {
         ->from($this->data)
         ->infer()
         ->category('country')
+        ->value('2011')
         ->title('World Population')
-        ->tooltip(fn (Tooltip $tooltip) => $tooltip->triggerByAxis())
+        ->tooltip(fn (Tooltip $tooltip) => $tooltip
+            ->triggerByAxis()
+            // ->axisPointer->type('shadow')
+        )
         ->legend()
         // ->x(fn (Axis $axis) => $axis->boundaryGap(0, 0.01))
         ->series([
