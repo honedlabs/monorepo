@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Series;
 
+use Honed\Chart\Concerns\Style\HasWidth;
 use Honed\Chart\Enums\ChartType;
-use Honed\Chart\Style\Concerns\HasWidth;
 
 class Bar extends Series
 {

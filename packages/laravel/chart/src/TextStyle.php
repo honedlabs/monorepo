@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace Honed\Chart;
 
-use Honed\Chart\Style\Concerns\HasBorderColor;
-use Honed\Chart\Style\Concerns\HasBorderType;
-use Honed\Chart\Style\Concerns\HasBorderWidth;
-use Honed\Chart\Style\Concerns\HasColor;
-use Honed\Chart\Style\Concerns\HasFontFamily;
-use Honed\Chart\Style\Concerns\HasFontSize;
-use Honed\Chart\Style\Concerns\HasFontStyle;
-use Honed\Chart\Style\Concerns\HasFontWeight;
-use Honed\Chart\Style\Concerns\HasHeight;
-use Honed\Chart\Style\Concerns\HasLineHeight;
-use Honed\Chart\Style\Concerns\HasOverflow;
-use Honed\Chart\Style\Concerns\HasShadowBlur;
-use Honed\Chart\Style\Concerns\HasShadowColor;
-use Honed\Chart\Style\Concerns\HasShadowOffset;
-use Honed\Chart\Style\Concerns\HasWidth;
+use Honed\Chart\Concerns\Style\HasBorderColor;
+use Honed\Chart\Concerns\Style\HasBorderType;
+use Honed\Chart\Concerns\Style\HasBorderWidth;
+use Honed\Chart\Concerns\Style\HasColor;
+use Honed\Chart\Concerns\Style\HasFontFamily;
+use Honed\Chart\Concerns\Style\HasFontSize;
+use Honed\Chart\Concerns\Style\HasFontStyle;
+use Honed\Chart\Concerns\Style\HasFontWeight;
+use Honed\Chart\Concerns\Style\HasHeight;
+use Honed\Chart\Concerns\Style\HasLineHeight;
+use Honed\Chart\Concerns\Style\HasOverflow;
+use Honed\Chart\Concerns\Style\HasShadowBlur;
+use Honed\Chart\Concerns\Style\HasShadowColor;
+use Honed\Chart\Concerns\Style\HasShadowOffset;
+use Honed\Chart\Concerns\Style\HasWidth;
 
 class TextStyle extends Chartable
 {

@@ -15,6 +15,8 @@ trait HasGrid
     protected $gridInstance;
 
     /**
+     * Add a grid to the chart.
+     *
      * @param  Grid|(Closure(Grid):Grid)|bool|null  $value
      * @return $this
      */
@@ -30,11 +32,17 @@ trait HasGrid
         return $this;
     }
 
+    /**
+     * Get the grid.
+     */
     public function getGrid(): ?Grid
     {
         return $this->gridInstance;
     }
 
+    /**
+     * Create a new grid, or use the existing one.
+     */
     protected function withGrid(): Grid
     {
         return $this->gridInstance ??= Grid::make();

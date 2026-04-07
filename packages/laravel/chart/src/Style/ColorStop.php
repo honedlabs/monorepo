@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Style;
 
-use Honed\Chart\Style\Concerns\HasColor;
-use Honed\Chart\Style\Concerns\HasOffset;
+use Honed\Chart\Concerns\Style\HasColor;
+use Honed\Chart\Concerns\Style\HasOffset;
 use Illuminate\Contracts\Support\Arrayable;
 
 /**

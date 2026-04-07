@@ -33,7 +33,6 @@ trait Proxyable
             return null;
         }
 
-        // Mimic PHP undefined property notice
         trigger_error(
             sprintf('Undefined property: %s::$%s', static::class, $name),
             E_USER_NOTICE

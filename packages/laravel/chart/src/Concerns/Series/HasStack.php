@@ -6,10 +6,15 @@ namespace Honed\Chart\Concerns\Series;
 
 trait HasStack
 {
-    protected ?string $stack = null;
+    /**
+     * The name of the stack group.
+     *
+     * @var ?string
+     */
+    protected $stack = null;
 
     /**
-     * Set the stack group name (e.g. ECharts `stack`).
+     * Set the name of the stack group.
      *
      * @return $this
      */
@@ -20,6 +25,9 @@ trait HasStack
         return $this;
     }
 
+    /**
+     * Get the name of the stack group.
+     */
     public function getStack(): ?string
     {
         return $this->stack;

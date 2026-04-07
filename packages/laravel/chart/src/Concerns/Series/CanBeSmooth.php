@@ -7,6 +7,8 @@ namespace Honed\Chart\Concerns\Series;
 trait CanBeSmooth
 {
     /**
+     * Indicates whether to smooth the line.
+     *
      * @var ?bool
      */
     protected $smooth;
@@ -35,11 +37,9 @@ trait CanBeSmooth
 
     /**
      * Determine if the line is smooth.
-     *
-     * @return true|null
      */
     public function isSmooth(): ?bool
     {
-        return $this->smooth ?: null;
+        return $this->smooth;
     }
 }

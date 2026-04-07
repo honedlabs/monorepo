@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Chart;
 
-use Honed\Chart\Style\Concerns\HasColor;
-use Honed\Chart\Style\Concerns\HasOpacity;
-use Honed\Chart\Style\Concerns\HasShadowBlur;
-use Honed\Chart\Style\Concerns\HasShadowOffset;
+use Honed\Chart\Concerns\Style\HasColor;
+use Honed\Chart\Concerns\Style\HasOpacity;
+use Honed\Chart\Concerns\Style\HasShadowBlur;
+use Honed\Chart\Concerns\Style\HasShadowOffset;
 
 class ShadowStyle extends Chartable
 {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Style;
 
-use Honed\Chart\Style\Concerns\HasRGB;
+use Honed\Chart\Concerns\Style\HasRGB;
 use Stringable;
 
 class Rgb implements Stringable

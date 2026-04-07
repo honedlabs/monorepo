@@ -23,12 +23,12 @@ trait HasSeries
     /**
      * Merge the series.
      *
-     * @param  Series|array<int, Series>  $series
+     * @param  Series|list<Series>  $series
      * @return $this
      */
     public function series(Series|array $series): static
     {
-        /** @var array<int, Series> */
+        /** @var list<Series> */
         $series = is_array($series) ? $series : func_get_args();
 
         $this->series = $this->getSeries()->merge($series);

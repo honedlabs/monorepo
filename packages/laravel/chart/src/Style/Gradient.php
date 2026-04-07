@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Style;
 
-use Honed\Chart\Style\Concerns\HasColorStops;
-use Honed\Chart\Style\Concerns\HasGradientType;
+use Honed\Chart\Concerns\Style\HasColorStops;
+use Honed\Chart\Concerns\Style\HasGradientType;
 use Illuminate\Contracts\Support\Arrayable;
 use InvalidArgumentException;
 

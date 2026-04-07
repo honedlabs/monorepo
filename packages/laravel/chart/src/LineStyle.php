@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Honed\Chart;
 
-use Honed\Chart\Style\Concerns\HasBorderType;
-use Honed\Chart\Style\Concerns\HasCap;
-use Honed\Chart\Style\Concerns\HasColor;
-use Honed\Chart\Style\Concerns\HasDashOffset;
-use Honed\Chart\Style\Concerns\HasJoin;
-use Honed\Chart\Style\Concerns\HasOpacity;
-use Honed\Chart\Style\Concerns\HasShadowBlur;
-use Honed\Chart\Style\Concerns\HasShadowColor;
-use Honed\Chart\Style\Concerns\HasShadowOffset;
-use Honed\Chart\Style\Concerns\HasWidth;
+use Honed\Chart\Concerns\Style\HasBorderType;
+use Honed\Chart\Concerns\Style\HasCap;
+use Honed\Chart\Concerns\Style\HasColor;
+use Honed\Chart\Concerns\Style\HasDashOffset;
+use Honed\Chart\Concerns\Style\HasJoin;
+use Honed\Chart\Concerns\Style\HasOpacity;
+use Honed\Chart\Concerns\Style\HasShadowBlur;
+use Honed\Chart\Concerns\Style\HasShadowColor;
+use Honed\Chart\Concerns\Style\HasShadowOffset;
+use Honed\Chart\Concerns\Style\HasWidth;
 
 class LineStyle extends Chartable
 {

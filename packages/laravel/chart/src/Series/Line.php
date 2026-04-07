@@ -65,7 +65,7 @@ class Line extends Series
             // 'blur' => $this->getBlur()?->toArray(),
             // 'select' => $this->getSelect()?->toArray(),
             // 'selectedMode' => $this->getSelectedMode(),
-            'smooth' => $this->isSmooth(),
+            'smooth' => $this->isSmooth() ?: null,
             // 'smoothMonotone' => $this->getSmoothMonotone(),
             // 'sampling' => $this->getSampling(),
             // 'dimensions',
