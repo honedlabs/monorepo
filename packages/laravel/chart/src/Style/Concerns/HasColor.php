@@ -31,6 +31,16 @@ trait HasColor
     }
 
     /**
+     * Set the colour.
+     *
+     * @return $this
+     */
+    public function colour(string|Rgb|Rgba|Gradient|null $value): static
+    {
+        return $this->color($value);
+    }
+
+    /**
      * Get the color.
      *
      * @return string|array<string, mixed>|null
@@ -38,5 +48,15 @@ trait HasColor
     public function getColor(): string|array|null
     {
         return Color::from($this->color);
+    }
+
+    /**
+     * Get the colour.
+     *
+     * @return string|array<string, mixed>|null
+     */
+    public function getColour(): string|array|null
+    {
+        return $this->getColor();
     }
 }

@@ -126,27 +126,19 @@ trait HasAxes
     }
 
     /**
-     * Add a new axis to the chart.
-     *
-     * @return $this
+     * Get the first axis for a specific dimension, or create a new one if it does not exist.
      */
-    public function withAxis(Dimension $value): static
+    public function withAxis(Dimension $value): Axis
     {
-        return $this->axis($this->newAxis($value));
-    }
+        $axis = $this->getAxes($value)->first();
 
-    /**
-     * Add a new axis to the chart if it does not exist.
-     *
-     * @return $this
-     */
-    public function withMissingAxis(Dimension $value): static
-    {
-        if (! $this->hasAxes($value)) {
-            return $this->withAxis($value);
+        if (is_null($axis)) {
+            $axis = $this->newAxis($value);
+
+            $this->axis($axis);
         }
 
-        return $this;
+        return $axis;
     }
 
     /**

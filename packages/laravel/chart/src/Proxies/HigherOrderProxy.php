@@ -32,4 +32,20 @@ class HigherOrderProxy
 
         return $result === $this->proxy ? $this->source : $result;
     }
+
+    /**
+     * Get the source object.
+     */
+    public function getSource(): Chartable
+    {
+        return $this->source;
+    }
+
+    /**
+     * Get the proxy itself.
+     */
+    public function getProxy(): Chartable
+    {
+        return $this->proxy;
+    }
 }

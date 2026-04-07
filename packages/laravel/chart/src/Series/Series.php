@@ -9,12 +9,16 @@ use Honed\Chart\Chartable;
 use Honed\Chart\Concerns\Components\HasTooltip;
 use Honed\Chart\Concerns\HasId;
 use Honed\Chart\Concerns\InteractsWithData;
+use Honed\Chart\Concerns\Proxies\Proxyable;
 use Honed\Chart\Concerns\Support\Inferrable;
 use Honed\Chart\Contracts\Resolvable;
 use Honed\Chart\Enums\ChartType;
+use Honed\Chart\Proxies\HigherOrderTooltip;
 use Honed\Chart\Style\Concerns\HasCursor;
 use Honed\Core\Concerns\HasName;
 use Illuminate\Support\Traits\ForwardsCalls;
+use TypeError;
+use ValueError;
 
 abstract class Series extends Chartable implements Resolvable
 {
@@ -25,6 +29,7 @@ abstract class Series extends Chartable implements Resolvable
     use HasTooltip;
     use Inferrable;
     use InteractsWithData;
+    use Proxyable;
 
     /**
      * The type of the series.
@@ -32,6 +37,14 @@ abstract class Series extends Chartable implements Resolvable
      * @var ChartType
      */
     public $type;
+
+    public function __get(string $name): mixed
+    {
+        return match ($name) {
+            'tooltip' => new HigherOrderTooltip($this, $this->withTooltip()),
+            default => $this->defaultGet($name),
+        };
+    }
 
     /**
      * Determine if the series requires axes to be provided.
@@ -45,6 +58,9 @@ abstract class Series extends Chartable implements Resolvable
      * Set the type of the series.
      *
      * @return $this
+     *
+     * @throws ValueError
+     * @throws TypeError
      */
     public function type(string|ChartType $value): static
     {
@@ -108,7 +124,7 @@ abstract class Series extends Chartable implements Resolvable
         return [
             'type' => $this->getType()->value,
             'id' => $this->getId(),
-            'name' => $this->name,
+            'name' => isset($this->name) ? $this->getName() : null, // @phpstan-ignore-line
             'data' => $this->getData(),
             'cursor' => $this->getCursor(),
             // 'clip' => $this->isClipped() ? null : false,

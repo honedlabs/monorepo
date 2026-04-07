@@ -7,9 +7,9 @@ namespace Honed\Chart\Proxies;
 /**
  * @template TSource of \Honed\Chart\Chartable
  *
- * @extends \Honed\Chart\Proxies\HigherOrderProxy<TSource, \Honed\Chart\Toolbox>
+ * @extends \Honed\Chart\Proxies\HigherOrderProxy<TSource, \Honed\Chart\Grid>
  */
-class HigherOrderToolbox extends HigherOrderProxy
+class HigherOrderGrid extends HigherOrderProxy
 {
     //
 }

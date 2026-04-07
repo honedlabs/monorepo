@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Chart\Tooltip\Concerns;
+namespace Honed\Chart\Concerns\Tooltip;
 
 use Honed\Chart\Enums\Trigger;
 
@@ -11,7 +11,7 @@ trait HasTrigger
     /**
      * The type of triggering for the toolip.
      *
-     * @var ?\Honed\Chart\Enums\Trigger
+     * @var ?Trigger
      */
     protected $trigger;
 

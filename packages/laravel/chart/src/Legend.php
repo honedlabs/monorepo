@@ -6,6 +6,7 @@ namespace Honed\Chart;
 
 use Honed\Chart\Concerns\CanBeShown;
 use Honed\Chart\Concerns\HasId;
+use Honed\Chart\Concerns\Proxies\Proxyable;
 use Honed\Chart\Enums\LegendType;
 use TypeError;
 use ValueError;
@@ -14,7 +15,6 @@ class Legend extends Chartable
 {
     // use HasRotation;
     use CanBeShown;
-
     // use HasBackgroundColor;
     // use HasBorderColor;
     // use HasBorderRadius;
@@ -22,6 +22,8 @@ class Legend extends Chartable
     // use HasBottom;
     // use HasHeight;
     use HasId;
+
+    use Proxyable;
     // use HasInactiveBorderColor;
     // use HasInactiveColor;
     // use HasInactiveWidth;
@@ -49,6 +51,27 @@ class Legend extends Chartable
      * @var ?LegendType
      */
     protected $type;
+
+    /**
+     * Legend item names (`data` in ECharts).
+     *
+     * @var list<string>|null
+     */
+    protected $labels;
+
+    /**
+     * Get a property of the legend.
+     */
+    public function __get(string $name): mixed
+    {
+        return match ($name) {
+            // 'itemStyle' => new HigherOrderItemStyle($this, $this->withItemStyle()),
+            // 'lineStyle' => new HigherOrderLineStyle($this, $this->withLineStyle()),
+            // 'textStyle' => new HigherOrderTextStyle($this, $this->withTextStyle()),
+            // 'emphasis' => new HigherOrderEmphasis($this, $this->withEmphasis()),
+            default => $this->defaultGet($name),
+        };
+    }
 
     /**
      * Set the type of legend.
@@ -100,6 +123,27 @@ class Legend extends Chartable
     }
 
     /**
+     * Set legend series names (ECharts `legend.data`).
+     *
+     * @param  list<string>  $labels
+     * @return $this
+     */
+    public function labels(array $labels): static
+    {
+        $this->labels = $labels;
+
+        return $this;
+    }
+
+    /**
+     * @return list<string>|null
+     */
+    public function getLabels(): ?array
+    {
+        return $this->labels;
+    }
+
+    /**
      * Get the representation of the legend.
      *
      * @return array<string,mixed>
@@ -107,7 +151,7 @@ class Legend extends Chartable
     protected function representation(): array
     {
         return [
-            'type' => $this->getType(),
+            'type' => $this->getType()?->value,
             'id' => $this->getId(),
             'show' => $this->isShown(),
             // 'zLevel' => $this->getZLevel(),
@@ -128,6 +172,7 @@ class Legend extends Chartable
             // 'lineStyle' => $this->getLineStyle()?->toArray(),
             // 'symbolRotate' => $this->getRotation(),
             // 'selectedMode' => $this->getSelectedMode(),
+            'data' => $this->getLabels(),
             // 'inactiveColor' => $this->getInactiveColor(),
             // 'inactiveBorderColor' => $this->getInactiveBorderColor(),
             // 'inactiveBorderWidth' => $this->getInactiveWidth(),

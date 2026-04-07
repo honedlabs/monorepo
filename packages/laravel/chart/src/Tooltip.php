@@ -7,7 +7,8 @@ namespace Honed\Chart;
 use Honed\Chart\Concerns\CanBeShown;
 use Honed\Chart\Concerns\Components\HasTextStyle;
 use Honed\Chart\Concerns\Proxies\Proxyable;
-use Honed\Chart\Tooltip\Concerns\HasTrigger;
+use Honed\Chart\Concerns\Tooltip\HasTrigger;
+use Honed\Chart\Proxies\HigherOrderTextStyle;
 use Illuminate\Support\Traits\ForwardsCalls;
 
 class Tooltip extends Chartable
@@ -24,7 +25,7 @@ class Tooltip extends Chartable
     public function __get(string $name): mixed
     {
         return match ($name) {
-            // 'textStyle' => new HigherOrderTextStyle($this, $this->withTextStyle()),
+            'textStyle' => new HigherOrderTextStyle($this, $this->withTextStyle()),
             default => $this->defaultGet($name),
         };
     }

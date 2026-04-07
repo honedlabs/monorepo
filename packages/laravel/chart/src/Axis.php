@@ -6,14 +6,17 @@ namespace Honed\Chart;
 
 use DateTimeImmutable;
 use Honed\Chart\Concerns\Axis\HasAxisType;
+use Honed\Chart\Concerns\Axis\HasBoundaryGap;
 use Honed\Chart\Concerns\Axis\HasDimension;
 use Honed\Chart\Concerns\CanBeShown;
 use Honed\Chart\Concerns\Components\HasTooltip;
 use Honed\Chart\Concerns\HasId;
 use Honed\Chart\Concerns\InteractsWithData;
+use Honed\Chart\Concerns\Proxies\Proxyable;
 use Honed\Chart\Concerns\Support\Inferrable;
 use Honed\Chart\Contracts\Resolvable;
 use Honed\Chart\Enums\AxisType;
+use Honed\Chart\Proxies\HigherOrderTooltip;
 use Illuminate\Support\Traits\ForwardsCalls;
 
 class Axis extends Chartable implements Resolvable
@@ -21,11 +24,14 @@ class Axis extends Chartable implements Resolvable
     use CanBeShown;
     use ForwardsCalls;
     use HasAxisType;
+    use HasBoundaryGap;
     use HasDimension;
     use HasId;
     use HasTooltip;
+    use HasTooltip;
     use Inferrable;
     use InteractsWithData;
+    use Proxyable;
 
     /**
      * Indicate whether the data should be generated for the axis.
@@ -33,6 +39,17 @@ class Axis extends Chartable implements Resolvable
      * @var bool
      */
     protected $generate = true;
+
+    /**
+     * Get a property of the axis.
+     */
+    public function __get(string $name): mixed
+    {
+        return match ($name) {
+            'tooltip' => new HigherOrderTooltip($this, $this->withTooltip()),
+            default => $this->defaultGet($name),
+        };
+    }
 
     /**
      * Set whether the data should be generated for the axis.
@@ -127,7 +144,7 @@ class Axis extends Chartable implements Resolvable
             // 'nameRotate' => $this->getNameRotate(),
             // 'nameTruncate' => $this->getTruncate()?->toArray(),
             // 'inverse' => $this->isInverted(),
-            // 'boundaryGap' => $this->getBoundaryGap(),
+            'boundaryGap' => $this->getBoundaryGap(),
             // 'min' => $this->getMin(),
             // 'max' => $this->getMax(),
             // 'scale' => $this->isScaled() ?: null,

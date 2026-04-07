@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Chart;
 
 use Honed\Chart\Concerns\Components\HasAxes;
+use Honed\Chart\Concerns\Components\HasGrid;
 use Honed\Chart\Concerns\Components\HasLegend;
 use Honed\Chart\Concerns\Components\HasSeries;
 use Honed\Chart\Concerns\Components\HasTextStyle;
@@ -17,16 +18,29 @@ use Honed\Chart\Concerns\Support\Inferrable;
 use Honed\Chart\Contracts\Resolvable;
 use Honed\Chart\Enums\ChartType;
 use Honed\Chart\Enums\Dimension;
+use Honed\Chart\Proxies\HigherOrderAxis;
+use Honed\Chart\Proxies\HigherOrderGrid;
+use Honed\Chart\Proxies\HigherOrderLegend;
+use Honed\Chart\Proxies\HigherOrderTextStyle;
+use Honed\Chart\Proxies\HigherOrderTitle;
+use Honed\Chart\Proxies\HigherOrderToolbox;
 use Honed\Chart\Proxies\HigherOrderTooltip;
 use Illuminate\Support\Traits\ForwardsCalls;
 
 /**
+ * @property-read HigherOrderAxis<static> $x
+ * @property-read HigherOrderAxis<static> $y
+ * @property-read HigherOrderGrid<static> $grid
+ * @property-read HigherOrderTextStyle<static> $textStyle
+ * @property-read HigherOrderTitle<static> $title
+ * @property-read HigherOrderToolbox<static> $toolbox
  * @property-read HigherOrderTooltip<static> $tooltip
  */
 class Chart extends Chartable implements Resolvable
 {
     use ForwardsCalls;
     use HasAxes;
+    use HasGrid;
     use HasLegend;
     use HasSeries;
     use HasTextStyle;
@@ -50,6 +64,13 @@ class Chart extends Chartable implements Resolvable
     public function __get(string $name): mixed
     {
         return match ($name) {
+            'x' => new HigherOrderAxis($this, $this->withAxis(Dimension::X)),
+            'y' => new HigherOrderAxis($this, $this->withAxis(Dimension::Y)),
+            'grid' => new HigherOrderGrid($this, $this->withGrid()),
+            'legend' => new HigherOrderLegend($this, $this->withLegend()),
+            'textStyle' => new HigherOrderTextStyle($this, $this->withTextStyle()),
+            'title' => new HigherOrderTitle($this, $this->withTitle()),
+            'toolbox' => new HigherOrderToolbox($this, $this->withToolbox()),
             'tooltip' => new HigherOrderTooltip($this, $this->withTooltip()),
             default => $this->defaultGet($name),
         };
@@ -108,9 +129,9 @@ class Chart extends Chartable implements Resolvable
             return;
         }
 
-        $this->withMissingAxis(Dimension::X);
+        $this->withAxis(Dimension::X);
 
-        $this->withMissingAxis(Dimension::Y);
+        $this->withAxis(Dimension::Y);
 
         foreach ($this->getAxes() as $axis) {
             $dependent = $this->isFlipped() ? Dimension::Y : Dimension::X;
@@ -146,7 +167,7 @@ class Chart extends Chartable implements Resolvable
         return [
             'title' => $this->getTitle()?->toArray(),
             'legend' => $this->getLegend()?->toArray(),
-            // 'grid' => $this->getGrid()?->toArray(),
+            'grid' => $this->getGrid()?->toArray(),
             'xAxis' => $isPie ? null : $this->listAxes(Dimension::X),
             'yAxis' => $isPie ? null : $this->listAxes(Dimension::Y),
             // 'radiusAxis' => $this->getRadiusAxis()?->toArray(),

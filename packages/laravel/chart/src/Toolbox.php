@@ -17,7 +17,31 @@ class Toolbox extends Chartable
     use HasTooltip;
 
     /**
-     * Get the representation of the tooltip.
+     * @var array<string, mixed>|null
+     */
+    protected $feature;
+
+    /**
+     * @param  array<string, mixed>  $feature
+     * @return $this
+     */
+    public function feature(array $feature): static
+    {
+        $this->feature = $feature;
+
+        return $this;
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    public function getFeature(): ?array
+    {
+        return $this->feature;
+    }
+
+    /**
+     * Get the representation of the toolbox.
      *
      * @return array<string, mixed>
      */
@@ -26,11 +50,11 @@ class Toolbox extends Chartable
         return [
             'id' => $this->getId(),
             'show' => $this->isShown(),
+            'feature' => $this->getFeature(),
             // 'orient' => $this->getOrientation(),
             // 'itemSize' => $this->getItemSize(),
             // 'itemGap' => $this->getItemGap(),
             // 'showTitle' => $this->isShowTitle(),
-            // 'feature'
             // 'iconStyle' => $this->getIconStyle()?->toArray(),
             // 'emphasis' => $this->getEmphasis()?->toArray(),
             // 'zLevel' => $this->getZLevel(),

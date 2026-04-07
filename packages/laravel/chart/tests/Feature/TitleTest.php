@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Honed\Chart\Proxies\HigherOrderTextStyle;
 use Honed\Chart\Title;
 
 beforeEach(function () {
@@ -11,4 +12,9 @@ beforeEach(function () {
 it('has array representation', function () {
     expect($this->title)
         ->toArray()->toEqual([]);
+});
+
+it('has higher order proxies', function () {
+    expect($this->title->textStyle)
+        ->toBeInstanceOf(HigherOrderTextStyle::class);
 });

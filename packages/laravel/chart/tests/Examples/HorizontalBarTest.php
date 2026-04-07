@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Honed\Chart\Axis;
 use Honed\Chart\Chart;
 use Honed\Chart\Series\Bar;
 use Honed\Chart\Tooltip;

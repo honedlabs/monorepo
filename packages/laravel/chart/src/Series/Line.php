@@ -7,6 +7,7 @@ namespace Honed\Chart\Series;
 use Honed\Chart\Concerns\Components\HasAreaStyle;
 use Honed\Chart\Concerns\Components\HasItemStyle;
 use Honed\Chart\Concerns\Series\CanBeSmooth;
+use Honed\Chart\Concerns\Series\HasStack;
 use Honed\Chart\Enums\ChartType;
 
 class Line extends Series
@@ -14,6 +15,7 @@ class Line extends Series
     use CanBeSmooth;
     use HasAreaStyle;
     use HasItemStyle;
+    use HasStack;
 
     /**
      * Provide the series with any necessary setup.
@@ -47,7 +49,7 @@ class Line extends Series
             // 'showSymbol' => $this->isShowSymbol(),
             // 'showAllSymbol' => $this->isShowAllSymbol(),
             // 'legendHoverLink' => $this->isLegendHoverLink(),
-            // 'stack' => $this->getStack(),
+            'stack' => $this->getStack(),
             // 'stackStrategy' => $this->getStackStrategy(),
             // 'stackOrder' => $this->getStackOrder(),
             // 'connectNulls' => $this->isNullConnected() ?: null,

@@ -7,12 +7,15 @@ namespace Honed\Chart;
 use Honed\Chart\Concerns\CanBeShown;
 use Honed\Chart\Concerns\Components\HasTextStyle;
 use Honed\Chart\Concerns\HasId;
+use Honed\Chart\Concerns\Proxies\Proxyable;
+use Honed\Chart\Proxies\HigherOrderTextStyle;
 
 class Title extends Chartable
 {
     use CanBeShown;
     use HasId;
     use HasTextStyle;
+    use Proxyable;
 
     /**
      * The main title text.
@@ -20,6 +23,15 @@ class Title extends Chartable
      * @var ?string
      */
     protected $text;
+
+    public function __get(string $name): mixed
+    {
+        return match ($name) {
+            'textStyle' => new HigherOrderTextStyle($this, $this->withTextStyle()),
+            // 'subtextStyle' => new HigherOrderTextStyle($this, $this->withSubtextStyle()),
+            default => $this->defaultGet($name),
+        };
+    }
 
     /**
      * Set the main title text.
