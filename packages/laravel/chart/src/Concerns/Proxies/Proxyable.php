@@ -6,10 +6,7 @@ namespace Honed\Chart\Concerns\Proxies;
 
 use ReflectionProperty;
 
-/**
- * @internal
- */
-trait ProxiesCalls
+trait Proxyable
 {
     /**
      * Get a property of the object.

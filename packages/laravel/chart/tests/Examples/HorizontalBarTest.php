@@ -71,7 +71,7 @@ it('is replicable', function () {
             // ->axisPointer->type('shadow')
         )
         ->legend()
-        // ->x(fn (Axis $axis) => $axis->boundaryGap(0, 0.01))
+        // ->x->boundaryGap(0, 0.01)
         ->series([
             Bar::make()
                 ->name('2011')

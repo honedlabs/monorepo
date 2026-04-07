@@ -11,7 +11,7 @@ trait HasTrigger
     /**
      * The type of triggering for the toolip.
      *
-     * @var ?string
+     * @var ?\Honed\Chart\Enums\Trigger
      */
     protected $trigger;
 
@@ -22,9 +22,7 @@ trait HasTrigger
      */
     public function trigger(string|Trigger $value): static
     {
-        $value = is_string($value) ? Trigger::from($value) : $value;
-
-        $this->trigger = $value->value;
+        $this->trigger = is_string($value) ? Trigger::from($value) : $value;
 
         return $this;
     }
@@ -62,7 +60,7 @@ trait HasTrigger
     /**
      * Get the type of triggering for the toolip.
      */
-    public function getTrigger(): ?string
+    public function getTrigger(): ?Trigger
     {
         return $this->trigger;
     }

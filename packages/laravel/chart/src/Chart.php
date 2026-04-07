@@ -12,7 +12,7 @@ use Honed\Chart\Concerns\Components\HasTitle;
 use Honed\Chart\Concerns\Components\HasToolbox;
 use Honed\Chart\Concerns\Components\HasTooltip;
 use Honed\Chart\Concerns\InteractsWithData;
-use Honed\Chart\Concerns\Proxies\ProxiesCalls;
+use Honed\Chart\Concerns\Proxies\Proxyable;
 use Honed\Chart\Concerns\Support\Inferrable;
 use Honed\Chart\Contracts\Resolvable;
 use Honed\Chart\Enums\ChartType;
@@ -35,7 +35,7 @@ class Chart extends Chartable implements Resolvable
     use HasTooltip;
     use Inferrable;
     use InteractsWithData;
-    use ProxiesCalls;
+    use Proxyable;
 
     /**
      * Whether to flip the x and y axes, only applicable to bar charts.

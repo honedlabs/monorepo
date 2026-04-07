@@ -6,6 +6,7 @@ namespace Honed\Chart;
 
 use Honed\Chart\Concerns\CanBeShown;
 use Honed\Chart\Concerns\Components\HasTextStyle;
+use Honed\Chart\Concerns\Proxies\Proxyable;
 use Honed\Chart\Tooltip\Concerns\HasTrigger;
 use Illuminate\Support\Traits\ForwardsCalls;
 
@@ -15,6 +16,18 @@ class Tooltip extends Chartable
     use ForwardsCalls;
     use HasTextStyle;
     use HasTrigger;
+    use Proxyable;
+
+    /**
+     * Get a property of the tooltip.
+     */
+    public function __get(string $name): mixed
+    {
+        return match ($name) {
+            // 'textStyle' => new HigherOrderTextStyle($this, $this->withTextStyle()),
+            default => $this->defaultGet($name),
+        };
+    }
 
     /**
      * Get the representation of the tooltip.
@@ -25,7 +38,7 @@ class Tooltip extends Chartable
     {
         return [
             'show' => $this->isShown(),
-            'trigger' => $this->getTrigger(),
+            'trigger' => $this->getTrigger()?->value,
             // 'showContent' => $this->
             // 'alwaysShowContent' =>
             // 'triggerOn' => $this->getTriggerOn(),
