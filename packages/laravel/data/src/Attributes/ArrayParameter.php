@@ -32,12 +32,11 @@ class ArrayParameter implements PreparesPropertyValue
         $name = $dataProperty->inputMappedName ?: $dataProperty->name;
         $value = $properties[$name] ?? null;
 
-        if (! is_array($value)) {
-            return $value;
-        }
-
-        return $dataProperty->type->acceptsType('array')
-            ? array_column($value, $this->key)
-            : ($value[$this->key] ?? null);
+        return match (true) {
+            ! is_array($value) => $value,
+            $dataProperty->type->isMixed => ($value[$this->key] ?? null),
+            $dataProperty->type->acceptsType('array') => array_column($value, $this->key),
+            default => ($value[$this->key] ?? null),
+        };
     }
 }
