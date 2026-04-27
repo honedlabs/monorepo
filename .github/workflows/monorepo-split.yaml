@@ -19,11 +19,11 @@ jobs:
           # - action
           # - billing
           # - bind
-          - chart
+          # - chart
           # - command
           # - core
           # - crumb
-          # - data
+          - data
           # - disable
           # - flash
           # - form
