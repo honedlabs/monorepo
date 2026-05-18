@@ -60,6 +60,7 @@ export declare interface HonedTable<T extends Record<string, any> = Record<strin
     isEmpty: boolean;
     isPageable: boolean;
     isToggleable: boolean;
+    isViewable: boolean;
     getRecordKey: (record: TableEntry<T> | TableRecord<T>) => Identifier;
     getEntry: (record: TableEntry<T>, column: Column<T> | string) => {
         v: any;
@@ -156,6 +157,7 @@ export declare interface Table<T extends Record<string, any> = Record<string, an
     _record_key?: string;
     _page_key?: string;
     toggleable: boolean;
+    viewable: boolean;
     records: Array<TableEntry<T> & {
         operations: InlineOperation[];
     }>;

@@ -65,6 +65,8 @@ export function useTable<
 
 	const isToggleable = computed(() => !!table.value._column_key);
 
+	const isViewable = computed(() => !!table.value.viewable);
+
 	/**
 	 * The heading columns for the table.
 	 */
@@ -450,6 +452,8 @@ export function useTable<
 		isPageable,
 		/** Whether the table supports toggling columns */
 		isToggleable,
+		/** Whether the table supports storing views */
+		isViewable,
 		/** Get the entry of the record for the column */
 		getEntry,
 		/** Get the value of the record for the column */

@@ -36,6 +36,7 @@ export interface Table<
 	_record_key?: string;
 	_page_key?: string;
 	toggleable: boolean;
+	viewable: boolean;
 	records: Array<TableEntry<T> & { operations: InlineOperation[] }>;
 	paginate: PaginateMap[K];
 	columns: Column<T>[];
@@ -62,6 +63,7 @@ export interface HonedTable<
 	isEmpty: boolean;
 	isPageable: boolean;
 	isToggleable: boolean;
+	isViewable: boolean;
 	getRecordKey: (record: TableEntry<T> | TableRecord<T>) => Identifier;
 	getEntry: (
 		record: TableEntry<T>,
