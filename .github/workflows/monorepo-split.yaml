@@ -23,7 +23,7 @@ jobs:
           # - command
           # - core
           # - crumb
-          - data
+          # - data
           # - disable
           # - flash
           # - form
@@ -42,7 +42,7 @@ jobs:
           # - registry
           # - scaffold
           # - stats
-          # - table
+          - table
           # - upload
           # - widget
     steps:
