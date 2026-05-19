@@ -21,13 +21,13 @@ jobs:
           # - bind
           # - chart
           # - command
-          # - core
+          - core
           # - crumb
           # - data
           # - disable
           # - flash
           # - form
-          - honed
+          # - honed
           # - infolist
           # - lang
           # - layout
@@ -42,7 +42,7 @@ jobs:
           # - registry
           # - scaffold
           # - stats
-          - table
+          # - table
           # - upload
           # - widget
     steps:
