@@ -20,7 +20,7 @@
 
 > **Requires [PHP 8.2+](https://php.net/releases/)**
 
-> **Requires [Laravel 11+](https://laravel.com/docs/releases).**
+> **Requires [Laravel 12+](https://laravel.com/docs/releases).**
 
 Get started with the package by requiring it in your PHP project using [Composer](https://getcomposer.org/).
 
