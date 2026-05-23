@@ -15,36 +15,36 @@ jobs:
       fail-fast: false
       matrix:
         package:
-          # - abn
-          # - action
-          # - billing
-          # - bind
-          # - chart
-          # - command
-          - core
-          # - crumb
-          # - data
-          # - disable
-          # - flash
-          # - form
+          - abn
+          - action
+          - billing
+          - bind
+          - chart
+          - command
+          # - core
+          - crumb
+          - data
+          - disable
+          - flash
+          - form
           # - honed
-          # - infolist
-          # - lang
-          # - layout
-          # - lock
-          # - memo
-          # - modal
-          # - nav
-          # - option
-          # - page
-          # - persist
-          # - refine
-          # - registry
-          # - scaffold
-          # - stats
-          # - table
-          # - upload
-          # - widget
+          - infolist
+          - lang
+          - layout
+          - lock
+          - memo
+          - modal
+          - nav
+          - option
+          - page
+          - persist
+          - refine
+          - registry
+          - scaffold
+          - stats
+          - table
+          - upload
+          - widget
     steps:
       - name: Checkout
         uses: actions/checkout@v4
