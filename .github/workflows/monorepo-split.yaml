@@ -22,8 +22,8 @@ jobs:
           # - chart
           # - command
           # - core
-          - crumb
-          # - data
+          # - crumb
+          - data
           # - disable
           # - flash
           # - form
