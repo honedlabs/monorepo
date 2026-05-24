@@ -19,8 +19,8 @@ jobs:
           # - action
           # - billing
           # - bind
-          - chart
-          # - command
+          # - chart
+          - command
           # - core
           # - crumb
           # - data
