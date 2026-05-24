@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Data\Rules;
 
 use Honed\Data\Support\AbstractRule;
+use Illuminate\Support\Arr;
 use League\ISO3166\ISO3166;
 
 class Currency extends AbstractRule
@@ -34,7 +35,11 @@ class Currency extends AbstractRule
     {
         /** @var list<string> */
         return array_values(
-            array_unique((array) data_get((new ISO3166())->all(), '*.currency.*'))
+            array_unique(
+                Arr::flatten(
+                    Arr::pluck((new ISO3166())->all(), 'currency')
+                )
+            )
         );
     }
 }
