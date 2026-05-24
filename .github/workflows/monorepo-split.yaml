@@ -20,9 +20,9 @@ jobs:
           # - billing
           # - bind
           # - chart
-          - command
+          # - command
           # - core
-          # - crumb
+          - crumb
           # - data
           # - disable
           # - flash
