@@ -51,9 +51,12 @@ trait HasColors
     public function colors(string|Rgb|Rgba|Gradient|Enumerable|array $colors): static
     {
         if ($colors instanceof Enumerable || is_array($colors)) {
-            $this->colors = $this->getColors()->merge(
+            /** @var Collection<int, string|Rgb|Rgba|Gradient> $merged */
+            $merged = $this->getColors()->merge(
                 $colors instanceof Enumerable ? $colors->all() : $colors
             );
+
+            $this->colors = $merged;
 
             return $this;
         }
