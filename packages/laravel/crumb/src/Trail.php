@@ -10,12 +10,15 @@ use Honed\Crumb\Support\Constants;
 use Illuminate\Support\Arr;
 use Inertia\Inertia;
 
+/**
+ * @extends Primitive<int, array<string, mixed>>
+ */
 class Trail extends Primitive
 {
     /**
      * List of the crumbs.
      *
-     * @var array<int,\Honed\Crumb\Crumb>
+     * @var list<\Honed\Crumb\Crumb>
      */
     protected $crumbs = [];
 
@@ -53,9 +56,10 @@ class Trail extends Primitive
      */
     public function crumbs(...$crumbs)
     {
+        /** @var list<Crumb> $crumbs */
         $crumbs = Arr::flatten($crumbs);
 
-        $this->crumbs = \array_merge($this->crumbs, $crumbs);
+        $this->crumbs = [...$this->crumbs, ...$crumbs];
 
         return $this;
     }
@@ -156,7 +160,7 @@ class Trail extends Primitive
      *
      * @return $this
      */
-    protected function terminating(bool $value = true): static
+    public function terminating(bool $value = true): static
     {
         $this->terminating = $value;
 
@@ -168,7 +172,7 @@ class Trail extends Primitive
      *
      * @return bool
      */
-    protected function isTerminating(): bool
+    public function isTerminating(): bool
     {
         return $this->terminating;
     }
@@ -178,7 +182,7 @@ class Trail extends Primitive
      *
      * @return $this
      */
-    protected function terminate(): static
+    public function terminate(): static
     {
         $this->terminated = true;
 
@@ -188,13 +192,15 @@ class Trail extends Primitive
     /**
      * Determine if the trail has been terminated.
      */
-    protected function isTerminated(): bool
+    public function isTerminated(): bool
     {
         return $this->terminated;
     }
 
     /**
-     * {@inheritdoc}
+     * Get the representation of the trail.
+     *
+     * @return list<array<string, mixed>>
      */
     protected function representation(): array
     {

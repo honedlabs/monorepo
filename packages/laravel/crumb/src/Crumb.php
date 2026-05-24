@@ -90,7 +90,7 @@ class Crumb extends Primitive
             return $parameters[$parameterName];
         }
 
-        /** @var array<int, mixed> */
+        /** @var list<mixed> */
         return match ($parameterName) {
             'request' => [$request],
             'route' => [$request->route()],
@@ -114,7 +114,7 @@ class Crumb extends Primitive
                 : [],
         );
 
-        /** @var array<int, mixed> */
+        /** @var list<mixed> */
         return match ($parameterType) {
             Request::class => [$request],
             Route::class => [$request->route()],

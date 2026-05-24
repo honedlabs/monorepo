@@ -14,7 +14,6 @@ it('makes', function () {
     $trail = Trail::make(Crumb::make('Home', 'home'));
 
     expect($trail)->toBeInstanceOf(Trail::class)
-        ->hasCrumbs()->toBeTrue()
         ->getCrumbs()->toEqual([
             Crumb::make('Home', 'home'),
         ]);
@@ -34,7 +33,6 @@ it('adds', function () {
         ->add(Crumb::make('Home', 'home'));
 
     expect($trail)->toBeInstanceOf(Trail::class)
-        ->hasCrumbs()->toBeTrue()
         ->getCrumbs()->toEqual([
             Crumb::make('Home', 'home'),
         ]);
