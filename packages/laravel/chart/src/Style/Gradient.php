@@ -70,7 +70,7 @@ class Gradient implements Arrayable
      *
      * @throws InvalidArgumentException if the coordinate is not between 0 and 1
      *
-     * @see \Honed\Chart\Style\Gradient::getX()
+     * @see Gradient::getX()
      */
     public function x1(float|int $value): static
     {
@@ -88,7 +88,7 @@ class Gradient implements Arrayable
     /**
      * Get the first x coordinate
      *
-     * @see \Honed\Chart\Style\Gradient::getX()
+     * @see Gradient::getX()
      */
     public function getX1(): float|int
     {
@@ -118,7 +118,7 @@ class Gradient implements Arrayable
      *
      * @return $this
      *
-     * @see \Honed\Chart\Style\Gradient::getY()
+     * @see Gradient::getY()
      */
     public function y1(float|int $value): static
     {
@@ -136,7 +136,7 @@ class Gradient implements Arrayable
     /**
      * Get the first y coordinate.
      *
-     * @see \Honed\Chart\Style\Gradient::getY()
+     * @see Gradient::getY()
      */
     public function getY1(): float|int
     {

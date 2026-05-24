@@ -81,7 +81,7 @@ class Rgba implements Stringable
     /**
      * Get the string representation of the RGBA color.
      *
-     * @see \Honed\Chart\Style\Rgba::__toString()
+     * @see Rgba::__toString()
      */
     public function toString(): string
     {
@@ -91,7 +91,7 @@ class Rgba implements Stringable
     /**
      * Get the string representation of the RGBA color.
      *
-     * @see \Honed\Chart\Style\Rgba::__toString()
+     * @see Rgba::__toString()
      */
     public function value(): string
     {
