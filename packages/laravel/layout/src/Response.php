@@ -7,8 +7,11 @@ namespace Honed\Layout;
 use BackedEnum;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Response as ResponseFactory;
+use Inertia\PropsResolver;
 use Inertia\Response as InertiaResponse;
+use Inertia\Ssr\SsrState;
 use Inertia\Support\Header;
 use UnitEnum;
 
@@ -67,26 +70,26 @@ class Response extends InertiaResponse
      */
     public function toResponse($request)
     {
-        $props = $this->resolveProperties($request, $this->props);
+        $resolver = new PropsResolver($request, $this->component);
+        [$resolvedProps, $resolvedMetadata] = $resolver->resolve($this->sharedProps, $this->props);
 
         $page = [
             'component' => $this->getLayoutedComponent(),
-            'props' => $props,
+            'props' => $resolvedProps,
             'url' => $this->getUrl($request),
             'version' => $this->version,
-            'clearHistory' => $this->clearHistory,
-            'encryptHistory' => $this->encryptHistory,
-            ...$this->resolveMergeProps($request),
-            ...$this->resolveDeferredProps($request),
-            ...$this->resolveCacheDirections($request),
-            ...$this->resolveScrollProps($request),
-            ...$this->resolveOnceProps($request),
+            ...$resolvedMetadata,
+            ...$this->resolveClearHistory($request),
+            ...$this->resolveEncryptHistory($request),
             ...$this->resolveFlashData($request),
+            ...$this->resolvePreserveFragment($request),
         ];
 
         if ($request->header(Header::INERTIA)) {
             return new JsonResponse($page, 200, [Header::INERTIA => 'true']);
         }
+
+        App::make(SsrState::class)->setPage($page);
 
         return ResponseFactory::view($this->rootView, $this->viewData + ['page' => $page]);
     }

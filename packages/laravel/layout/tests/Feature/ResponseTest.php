@@ -17,8 +17,13 @@ enum UnitLayout
 }
 
 beforeEach(function () {
-    $this->response = (new Response('User/Edit', ['user' => ['name' => 'Jonathan']], 'app', '123'))
-        ->layout('PageLayout');
+    $this->response = (new Response(
+        'User/Edit',
+        [],
+        ['user' => ['name' => 'Jonathan']],
+        'app',
+        '123'
+    ))->layout('PageLayout');
 });
 
 it('has layout for backed enum', function () {
@@ -38,7 +43,15 @@ it('has layouted response', function () {
         ->getLayout()->toBe('PageLayout')
         ->getLayoutedComponent()->toBe('User/Edit'.Response::FORMATTER.'PageLayout');
 
-    expect(new Response('User/Edit', ['user' => ['name' => 'Jonathan']], 'app', '123'))
+    $response = new Response(
+        'User/Edit',
+        [],
+        ['user' => ['name' => 'Jonathan']],
+        'app',
+        '123'
+    );
+
+    expect($response)
         ->getLayout()->toBeNull()
         ->getLayoutedComponent()->toBe('User/Edit');
 });

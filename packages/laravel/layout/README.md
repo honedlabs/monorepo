@@ -18,11 +18,11 @@
 
 ## Installation
 
-> **Requires [PHP 8.2+](https://php.net/releases/)**
+> **Requires [PHP 8.3+](https://php.net/releases/)**
 
-> **Requires [Laravel 11+](https://laravel.com/docs/releases).**
+> **Requires [Laravel 12+](https://laravel.com/docs/releases).**
 
-> **Requires [Inertia.js 1.2+](https://inertiajs.com/server-side-setup)**
+> **Requires [Inertia.js 2.0+](https://inertiajs.com/server-side-setup)**
 
 Get started with the package by requiring it in your PHP project using [Composer](https://getcomposer.org/).
 
