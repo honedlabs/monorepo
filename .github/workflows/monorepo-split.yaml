@@ -30,20 +30,20 @@ jobs:
           # - honed
           # - infolist
           - lang
-          # - layout
-          # - lock
-          # - memo
-          # - modal
-          # - nav
-          # - option
+          - layout
+          - lock
+          - memo
+          - modal
+          - nav
+          - option
           # - page
-          # - persist
+          - persist
           # - refine
           # - registry
           # - scaffold
-          # - stats
+          - stats
           # - table
-          # - upload
+          - upload
           # - widget
     steps:
       - name: Checkout
