@@ -93,6 +93,18 @@ class NoLockStore implements Store
     }
 
     /**
+     * Set the expiration of a cached item.
+     *
+     * @param  string  $key
+     * @param  int  $seconds
+     * @return bool
+     */
+    public function touch($key, $seconds)
+    {
+        return Cache::touch($key, $seconds);
+    }
+
+    /**
      * Remove an item from the cache.
      *
      * @param  string  $key

@@ -175,27 +175,26 @@ it('handles putMany with memoization', function () {
 
 it('handles many with mixed memoized and non-memoized keys', function () {
     $cache = app('cache');
-    
+
     expect($cache)
         ->put('key-1', 'value-1', 60)->toBeTrue()
         ->get('key-1')->toBe('value-1')
         ->isMemoized('key-1')->toBeTrue()
         ->put('key-2', 'value-2', 60)->toBeTrue();
-        
+
     $result = $cache->many(['key-1', 'key-2', 'key-3']);
-    
+
     expect($result)->toEqualCanonicalizing([
         'key-1' => 'value-1',
         'key-2' => 'value-2',
         'key-3' => null,
     ]);
-    
+
     expect($cache)
         ->isMemoized('key-1')->toBeTrue()
         ->isMemoized('key-2')->toBeTrue()
         ->isMemoized('key-3')->toBeFalse();
 });
-
 
 it('handles many with all memoized keys', function () {
     expect(app('cache'))
@@ -249,17 +248,17 @@ it('handles decrement with custom value', function () {
 
 it('handles repository method access', function () {
     $cache = app('cache');
-    
-    expect($cache->getRepository())->toBeInstanceOf(\Illuminate\Cache\Repository::class);
+
+    expect($cache->getRepository())->toBeInstanceOf(Illuminate\Cache\Repository::class);
 });
 
 it('handles prefix operations', function () {
     $cache = app('cache');
-    
+
     expect($cache->getPrefix())->toBeString();
-    
+
     $originalPrefix = $cache->getPrefix();
-    
+
     expect($originalPrefix)->toBeString();
 });
 
@@ -276,7 +275,7 @@ it('handles complex memoization scenarios', function () {
 
 it('handles large data memoization', function () {
     $largeData = array_fill(0, 1000, 'large-value');
-    
+
     expect(app('cache'))
         ->put('large-key', $largeData, 60)->toBeTrue()
         ->get('large-key')->toEqualCanonicalizing($largeData)
@@ -291,7 +290,7 @@ it('handles unicode data memoization', function () {
         'chinese' => '你好世界',
         'arabic' => 'مرحبا بالعالم',
     ];
-    
+
     expect(app('cache'))
         ->put('unicode-key', $unicodeData, 60)->toBeTrue()
         ->get('unicode-key')->toEqualCanonicalizing($unicodeData)

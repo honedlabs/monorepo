@@ -181,6 +181,20 @@ class MemoCacheDecorator implements LockProvider, Store
     }
 
     /**
+     * Set the expiration of a cached item.
+     *
+     * @param  string  $key
+     * @param  int  $seconds
+     * @return bool
+     */
+    public function touch($key, $seconds)
+    {
+        $this->forgetMemoized($key);
+
+        return $this->getRepository()->touch($key, $seconds);
+    }
+
+    /**
      * Get a lock instance.
      *
      * @param  string  $name
