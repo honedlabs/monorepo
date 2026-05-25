@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use App\Enums\Status;
+use App\Data\LocaleStringData;
+use App\Data\StatusEnumData;
 use Honed\Form\Adapters\EnumAdapter;
 use Honed\Form\Components\Select;
-use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Support\DataConfig;
 
 beforeEach(function () {
@@ -17,24 +17,16 @@ it('has field', function () {
         ->field()->toBe(Select::class);
 });
 
-it('checks property conversion', function (bool $expected, Data $data) {
-    $property = property($data);
+it('checks property conversion', function (bool $expected, string $dataClass) {
+    $property = property($dataClass);
 
-    $dataClass = app(DataConfig::class)->getDataClass($data::class);
+    $dataClassConfig = app(DataConfig::class)->getDataClass($dataClass);
 
     expect($this->adapter)
-        ->shouldConvertProperty($property, $dataClass)->toBe($expected);
+        ->shouldConvertProperty($property, $dataClassConfig)->toBe($expected);
 })->with([
-    fn () => [false, new class() extends Data
-    {
-        public string $locale;
-    },
-    ],
-    fn () => [true, new class() extends Data
-    {
-        public Status $status;
-    },
-    ],
+    fn () => [false, LocaleStringData::class],
+    fn () => [true, StatusEnumData::class],
 ]);
 
 it('checks rules conversion', function (bool $expected, array $rules) {

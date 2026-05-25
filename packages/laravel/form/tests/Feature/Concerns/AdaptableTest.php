@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Data\TagsStatusListData;
 use App\Enums\Status;
 use Honed\Form\Attributes\Attributes;
 use Honed\Form\Attributes\ClassName;
@@ -197,11 +198,7 @@ it('gets options from property', function (Data $data, array|string $expected) {
         #[In('a', 'b')]
         public array $name;
     }, ['a', 'b']],
-    fn () => [new class() extends Data
-    {
-        /** @var list<Status> */
-        public array $name;
-    }, []], // Pint refactors this to remove the namespacing, else it will pass
+    fn () => [TagsStatusListData::from(['tags' => []]), Status::class],
 ]);
 
 it('checks if property is required', function (Data $data, bool $expected) {

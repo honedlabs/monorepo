@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-use App\Enums\Status;
+use App\Data\LocaleStringData;
+use App\Data\StatusEnumData;
+use App\Data\TagsStatusListData;
+use App\Data\TagsStringListData;
 use Honed\Form\Adapters\ArrayAdapter;
 use Honed\Form\Components\Select;
-use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Support\DataConfig;
 
 beforeEach(function () {
@@ -17,32 +19,18 @@ it('has field', function () {
         ->field()->toBe(Select::class);
 });
 
-it('checks property conversion', function (bool $expected, Data $data) {
-    $property = property($data);
+it('checks property conversion', function (bool $expected, string $dataClass) {
+    $property = property($dataClass);
 
-    $dataClass = app(DataConfig::class)->getDataClass($data::class);
+    $dataClassConfig = app(DataConfig::class)->getDataClass($dataClass);
 
     expect($this->adapter)
-        ->shouldConvertProperty($property, $dataClass)->toBe($expected);
+        ->shouldConvertProperty($property, $dataClassConfig)->toBe($expected);
 })->with([
-    fn () => [true, new class() extends Data
-    {
-        /** @var list<Status> */
-        public array $tags;
-    }],
-    fn () => [true, new class() extends Data
-    {
-        /** @var array<int, string> */
-        public array $tags;
-    }],
-    fn () => [false, new class() extends Data
-    {
-        public string $locale;
-    }],
-    fn () => [false, new class() extends Data
-    {
-        public Status $status;
-    }],
+    fn () => [true, TagsStatusListData::class],
+    fn () => [true, TagsStringListData::class],
+    fn () => [false, LocaleStringData::class],
+    fn () => [false, StatusEnumData::class],
 ]);
 
 it('checks rules conversion', function (bool $expected, array $rules) {
@@ -54,18 +42,14 @@ it('checks rules conversion', function (bool $expected, array $rules) {
     fn () => [true, ['required', 'list']],
 ]);
 
-it('sets property to multiple', function (Data $data) {
-    $property = property($data);
+it('sets property to multiple', function (string $dataClass) {
+    $property = property($dataClass);
 
-    $dataClass = app(DataConfig::class)->getDataClass($data::class);
+    $dataClassConfig = app(DataConfig::class)->getDataClass($dataClass);
 
-    expect($this->adapter->convertProperty($property, $dataClass))
+    expect($this->adapter->convertProperty($property, $dataClassConfig))
         ->toBeInstanceOf(Select::class)
         ->isMultiple()->toBeTrue();
 })->with([
-    fn () => new class() extends Data
-    {
-        /** @var list<Status> */
-        public array $tags;
-    },
+    fn () => TagsStatusListData::class,
 ]);
