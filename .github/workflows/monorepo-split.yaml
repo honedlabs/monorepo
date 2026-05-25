@@ -26,9 +26,9 @@ jobs:
           # - data
           # - disable
           # - flash
-          - form
+          # - form
           # - honed
-          # - infolist
+          - infolist
           # - lang
           # - layout
           # - lock
