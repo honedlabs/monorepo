@@ -114,6 +114,6 @@ class ArrayFormatter implements Formatter
     {
         $glue = $this->getGlue();
 
-        return $glue ? implode($glue, $value) : $value;
+        return $glue ? Collection::make($value)->implode($glue) : $value;
     }
 }

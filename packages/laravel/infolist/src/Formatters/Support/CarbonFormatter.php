@@ -110,17 +110,25 @@ abstract class CarbonFormatter extends LocalisedFormatter
             $value = $this->newCarbon($value);
         }
 
+        if (! $value instanceof CarbonInterface) {
+            return null;
+        }
+
         if ($this->isSince()) {
-            return $value?->diffForHumans();
+            return $value->diffForHumans();
         }
 
         if ($tz = $this->getTimezone()) {
-            $value = $value?->setTimezone($tz);
+            $value = $value->setTimezone($tz);
         }
 
-        return $value // @phpstan-ignore-line method.nonObject
-            ?->locale($this->getLocale())
-            ->translatedFormat($this->getDateFormat());
+        $value = $value->locale($this->getLocale());
+
+        if (! $value instanceof CarbonInterface) {
+            return null;
+        }
+
+        return $value->translatedFormat($this->getDateFormat());
     }
 
     /**

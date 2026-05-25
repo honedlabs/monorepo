@@ -9,7 +9,7 @@ use Closure;
 use Honed\Infolist\Contracts\Formatter;
 
 /**
- * @implements Formatter<int|string|\BackedEnum, mixed>
+ * @implements Formatter<int|string|BackedEnum, mixed>
  */
 class MappedFormatter implements Formatter
 {

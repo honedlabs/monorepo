@@ -8,7 +8,7 @@ use BackedEnum;
 use Honed\Infolist\Contracts\Formatter;
 
 /**
- * @implements Formatter<int|string|\BackedEnum|null, \BackedEnum|null>
+ * @implements Formatter<int|string|BackedEnum|null, BackedEnum|null>
  */
 class EnumFormatter implements Formatter
 {
