@@ -23,9 +23,9 @@ jobs:
           # - command
           # - core
           # - crumb
-          - data
+          # - data
           # - disable
-          # - flash
+          - flash
           # - form
           # - honed
           # - infolist
