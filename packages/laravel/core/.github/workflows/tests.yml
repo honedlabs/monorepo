@@ -35,7 +35,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -53,4 +53,4 @@ jobs:
         run: composer install -q --no-interaction
         
       - name: Execute tests
-        run: vendor/bin/pest --ci
+        run: vendor/bin/pest --ci --no-coverage
