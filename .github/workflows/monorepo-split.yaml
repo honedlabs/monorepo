@@ -29,13 +29,13 @@ jobs:
           # - form
           # - honed
           # - infolist
-          - lang
+          # - lang
           - layout
           - lock
           - memo
-          - modal
+          # - modal
           - nav
-          - option
+          # - option
           # - page
           - persist
           # - refine
