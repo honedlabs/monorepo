@@ -13,7 +13,6 @@ on:
       - 'packages/**/vite.config.ts'
       - 'packages/**/vitest.config.js'
 
-
 jobs:
   test:
     if: ${{ false }}
