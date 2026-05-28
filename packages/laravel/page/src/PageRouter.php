@@ -92,7 +92,8 @@ class PageRouter
         }
 
         /** @var string|null */
-        $paths = config('inertia.testing.page_paths', null);
+        $paths = config('inertia.testing.page_paths')
+            ?? config('inertia.pages.paths');
 
         if ($paths) {
             return $paths;
@@ -266,7 +267,8 @@ class PageRouter
     protected function isValidPage($file)
     {
         /** @var array<int, string> */
-        $extensions = config('inertia.testing.page_extensions', []);
+        $extensions = config('inertia.testing.page_extensions')
+            ?? config('inertia.pages.extensions', []);
 
         return match (true) {
             ! $file->isFile(),
@@ -328,7 +330,9 @@ class PageRouter
 
         // Exclude specific directories
         if (Str::contains($pattern, '/')) {
-            return Str::is($pattern, $file->getRelativePathname());
+            $pathname = str_replace('\\', '/', $file->getRelativePathname());
+
+            return Str::is($pattern, $pathname);
         }
 
         $name = $file->getFilename();

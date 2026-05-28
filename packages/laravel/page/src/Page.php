@@ -44,6 +44,8 @@ class Page
      */
     public function __construct($filename)
     {
+        $filename = str_replace('\\', '/', $filename);
+
         $directory = pathinfo($filename, PATHINFO_DIRNAME);
 
         $this->name = pathinfo($filename, PATHINFO_FILENAME);
