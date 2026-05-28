@@ -7,7 +7,6 @@ namespace Honed\Bind;
 use Honed\Bind\Commands\BindCacheCommand;
 use Honed\Bind\Commands\BindClearCommand;
 use Honed\Bind\Commands\BinderMakeCommand;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\LazyCollection;
 use Illuminate\Support\ServiceProvider;
@@ -31,7 +30,7 @@ class BindServiceProvider extends ServiceProvider
     /**
      * The paths to discover binders.
      *
-     * @var iterable<int, string>
+     * @var array<int, string>
      */
     protected static $binderDiscoveryPaths = [];
 
@@ -50,8 +49,13 @@ class BindServiceProvider extends ServiceProvider
      */
     public static function addBinderDiscoveryPaths(iterable|string $paths)
     {
+        /** @var array<int, string> $paths */
+        $paths = is_string($paths)
+            ? [$paths]
+            : (is_array($paths) ? $paths : iterator_to_array($paths));
+
         static::$binderDiscoveryPaths = (new LazyCollection(static::$binderDiscoveryPaths))
-            ->merge(Arr::wrap($paths))
+            ->merge($paths)
             ->unique()
             ->values()
             ->all();
@@ -63,9 +67,11 @@ class BindServiceProvider extends ServiceProvider
      * @param  iterable<int, string>  $paths
      * @return void
      */
-    public static function setBinderDiscoveryPaths($paths)
+    public static function setBinderDiscoveryPaths(iterable $paths)
     {
-        static::$binderDiscoveryPaths = $paths;
+        static::$binderDiscoveryPaths = is_array($paths)
+            ? $paths
+            : iterator_to_array($paths);
     }
 
     /**
