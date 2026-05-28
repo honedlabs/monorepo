@@ -30,7 +30,7 @@ it('has array representation', function () {
         ->toArray()->toEqualCanonicalizing([
             'name' => 'description',
             'label' => 'Description',
-            'value' => $this->component->empty(),
+            'defaultValue' => $this->component->empty(),
             'placeholder' => 'Enter a description',
             'component' => FormComponent::Textarea->value,
         ]);
