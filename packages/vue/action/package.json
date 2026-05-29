@@ -1,7 +1,7 @@
 {
   "name": "@honed/action",
   "private": false,
-  "version": "0.14.0",
+  "version": "0.15.0",
   "license": "MIT",
   "description": "Create server-driven actions for your Inertia.js application.",
   "keywords": [
@@ -58,7 +58,7 @@
   },
   "peerDependencies": {
     "vue": "^3.4.0",
-    "@inertiajs/vue3": "^1.2.0||^2.0.0",
+    "@inertiajs/vue3": "^1.2.0||^2.0.0||^3.0.0",
     "axios": "^1.2.0"
   },
   "devDependencies": {

@@ -1,10 +1,10 @@
-import { computed as i, ref as w } from "vue";
+import { computed as d, ref as g } from "vue";
 import { router as x } from "@inertiajs/vue3";
 import b from "axios";
 function v(e, c = {}, u = {}) {
   if (!e.href || !e.method)
     return !1;
-  if (e.type === "inertia")
+  if (console.log(u), e.type === "inertia")
     e.method === "delete" ? x.delete(e.href, u) : x[e.method](e.href, c, u);
   else {
     const n = (a) => {
@@ -24,14 +24,14 @@ function o(e, c = {}, u = {}) {
 function S(e, c, u = {}) {
   if (!(e != null && e[c]))
     throw new Error("The batch must be provided with valid props and key.");
-  const n = i(() => e[c]), a = i(
+  const n = d(() => e[c]), a = d(
     () => o(n.value.inline)
-  ), f = i(
+  ), f = d(
     () => o(n.value.bulk)
-  ), h = i(
+  ), h = d(
     () => o(n.value.page)
   );
-  function d(r, l, t = {}) {
+  function i(r, l, t = {}) {
     return v(r, l, { ...u, ...t });
   }
   function s(r, l, t = {}) {
@@ -44,13 +44,13 @@ function S(e, c, u = {}) {
     inline: a,
     bulk: f,
     page: h,
-    executeInline: d,
+    executeInline: i,
     executeBulk: s,
     executePage: m
   };
 }
 function V() {
-  const e = w({
+  const e = g({
     all: !1,
     only: /* @__PURE__ */ new Set(),
     except: /* @__PURE__ */ new Set()
@@ -74,7 +74,7 @@ function V() {
   function h(l) {
     return e.value.all ? !e.value.except.has(l) : e.value.only.has(l);
   }
-  const d = i(() => e.value.all && e.value.except.size === 0), s = i(() => e.value.only.size > 0 || d.value);
+  const i = d(() => e.value.all && e.value.except.size === 0), s = d(() => e.value.only.size > 0 || i.value);
   function m(l) {
     return {
       "onUpdate:modelValue": (t) => {
@@ -89,11 +89,11 @@ function V() {
       "onUpdate:modelValue": (l) => {
         l ? c() : u();
       },
-      modelValue: d.value
+      modelValue: i.value
     };
   }
   return {
-    allSelected: d,
+    allSelected: i,
     selection: e,
     hasSelected: s,
     selectAll: c,
