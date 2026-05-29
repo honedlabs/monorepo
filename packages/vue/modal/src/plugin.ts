@@ -1,12 +1,12 @@
-import { App } from "vue"
-import resolver from "./resolver"
+import { App } from "vue";
+import resolver from "./resolver";
 
 export type ModalPluginOptions = {
-	resolve: (name: string) => any
-}
+	resolve: (name: string) => any;
+};
 
 export const plugin = {
 	install(app: App, options: ModalPluginOptions) {
-		resolver.setResolveCallback(options.resolve)
+		resolver.setResolveCallback(options.resolve);
 	},
-}
+};

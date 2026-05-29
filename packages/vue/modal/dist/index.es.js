@@ -1,89 +1,68 @@
-import { ref as n, computed as v, shallowRef as M, watch as h, defineAsyncComponent as C, h as L, nextTick as b, defineComponent as E } from "vue";
-import { usePage as I, router as U } from "@inertiajs/vue3";
-import d from "axios";
-const m = n(), R = {
-  setResolveCallback: (e) => {
-    m.value = e;
-  },
-  resolve: (e) => m.value(e)
-}, N = {
-  install(e, t) {
-    R.setResolveCallback(t.resolve);
-  }
-}, c = I(), a = v(() => {
-  var e;
-  return (e = c == null ? void 0 : c.props) == null ? void 0 : e.modal;
-}), k = v(() => {
-  var e;
-  return (e = a.value) == null ? void 0 : e.props;
-}), i = v(() => {
-  var e;
-  return (e = a.value) == null ? void 0 : e.key;
-}), r = n(), s = M(), p = n(!1), f = n(), u = n(), X = (e) => {
-  Object.entries(e).forEach(
-    ([t, l]) => ["post", "put", "patch", "delete"].forEach((o) => {
-      d.defaults.headers[o][t] = l;
-    })
-  );
-}, g = () => {
-  ["X-Inertia-Modal-Key", "X-Inertia-Modal-Redirect"].forEach(
-    ([t, l]) => ["get", "post", "put", "patch", "delete"].forEach((o) => {
-      delete d.defaults.headers[o][t];
-    })
-  );
-}, x = () => {
-  var e, t;
-  X({
-    "X-Inertia-Modal-Key": i.value,
-    "X-Inertia-Modal-Redirect": (e = a.value) == null ? void 0 : e.redirectURL
-  }), d.defaults.headers.get["X-Inertia-Modal-Redirect"] = ((t = a.value) == null ? void 0 : t.redirectURL) ?? "";
+import { computed as e, defineAsyncComponent as t, defineComponent as n, h as r, nextTick as i, ref as a, shallowRef as o, watch as s } from "vue";
+import { router as c, usePage as l } from "@inertiajs/vue3";
+import u from "axios";
+//#region src/resolver.ts
+var d = a(), f = {
+	setResolveCallback: (e) => {
+		d.value = e;
+	},
+	resolve: (e) => d.value(e)
+}, p = { install(e, t) {
+	f.setResolveCallback(t.resolve);
+} }, m = l(), h = e(() => m?.props?.modal), g = e(() => h.value?.props), _ = e(() => h.value?.key), v = a(), y = o(), b = a(!1), x = a(), S = a(), C = (e) => {
+	Object.entries(e).forEach(([e, t]) => [
+		"post",
+		"put",
+		"patch",
+		"delete"
+	].forEach((n) => {
+		u.defaults.headers[n][e] = t;
+	}));
 }, w = () => {
-  p.value = !1, g();
-}, y = () => {
-  var e, t, l, o;
-  if (u.value == ((e = a.value) == null ? void 0 : e.nonce) || !((t = a.value) != null && t.component))
-    return w();
-  r.value != ((l = a.value) == null ? void 0 : l.component) && (r.value = a.value.component, r.value ? s.value = C(() => R.resolve(r.value)) : s.value = !1), u.value = (o = a.value) == null ? void 0 : o.nonce, f.value = s.value ? L(s.value, {
-    key: i.value,
-    ...k.value
-  }) : "", b(() => p.value = !0);
+	["X-Inertia-Modal-Key", "X-Inertia-Modal-Redirect"].forEach(([e, t]) => [
+		"get",
+		"post",
+		"put",
+		"patch",
+		"delete"
+	].forEach((t) => {
+		delete u.defaults.headers[t][e];
+	}));
+}, T = () => {
+	C({
+		"X-Inertia-Modal-Key": _.value,
+		"X-Inertia-Modal-Redirect": h.value?.redirectURL
+	}), u.defaults.headers.get["X-Inertia-Modal-Redirect"] = h.value?.redirectURL ?? "";
+}, E = () => {
+	b.value = !1, w();
+}, D = () => {
+	if (S.value == h.value?.nonce || !h.value?.component) return E();
+	v.value != h.value?.component && (v.value = h.value.component, v.value ? y.value = t(() => f.resolve(v.value)) : y.value = !1), S.value = h.value?.nonce, x.value = y.value ? r(y.value, {
+		key: _.value,
+		...g.value
+	}) : "", i(() => b.value = !0);
 };
-y();
-typeof window < "u" && window.addEventListener("popstate", (e) => {
-  u.value = null;
-});
-h(
-  a,
-  () => {
-    var e;
-    ((e = a.value) == null ? void 0 : e.nonce) !== u.value && y();
-  },
-  { deep: !0 }
-);
-h(i, x);
-const H = (e = {}) => {
-  var l, o;
-  var t = ((l = a.value) == null ? void 0 : l.redirectURL) ?? ((o = a.value) == null ? void 0 : o.baseURL);
-  if (f.value = !1, !!t)
-    return U.visit(t, {
-      preserveScroll: !0,
-      preserveState: !0,
-      ...e
-    });
-}, K = () => ({
-  show: p,
-  vnode: f,
-  close: w,
-  redirect: H,
-  props: k
-}), O = E({
-  setup() {
-    const { vnode: e } = K();
-    return () => e.value;
-  }
-});
-export {
-  O as Modal,
-  N as modal,
-  K as useModal
-};
+D(), typeof window < "u" && window.addEventListener("popstate", (e) => {
+	S.value = null;
+}), s(h, () => {
+	h.value?.nonce !== S.value && D();
+}, { deep: !0 }), s(_, T);
+var O = (e = {}) => {
+	var t = h.value?.redirectURL ?? h.value?.baseURL;
+	if (x.value = !1, t) return c.visit(t, {
+		preserveScroll: !0,
+		preserveState: !0,
+		...e
+	});
+}, k = () => ({
+	show: b,
+	vnode: x,
+	close: E,
+	redirect: O,
+	props: g
+}), A = n({ setup() {
+	let { vnode: e } = k();
+	return () => e.value;
+} });
+//#endregion
+export { A as Modal, p as modal, k as useModal };

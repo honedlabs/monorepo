@@ -1,7 +1,7 @@
 {
 	"name": "@honed/modal",
 	"private": false,
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"license": "MIT",
 	"description": "A Vue 3 plugin that lets you implement backend-driven modal dialogs for Inertia apps.",
 	"keywords": [
@@ -14,17 +14,21 @@
 	],
 	"scripts": {
 		"dev": "vite",
-		"build": "vite build && vue-tsc --declaration --emitDeclarationOnly",
-		"prettier": "prettier src/ --write",
+		"build": "npm run format && npm run type-check && vite build",
+		"format": "npx @biomejs/biome format --write src/",
+		"type-check": "vue-tsc --noEmit",
+		"test": "vitest",
+		"coverage": "vitest run --coverage",
 		"patch": "npm version patch --no-git-tag-version",
 		"minor": "npm version minor --no-git-tag-version",
+		"major": "npm version major --no-git-tag-version",
 		"release": "npm run build && npm publish --access public"
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/honedlabs/honed.git"
+		"url": "https://github.com/honedlabs/monorepo.git"
 	},
-	"homepage": "https://github.com/honedlabs/honed/tree/main/packages/vue/refine",
+	"homepage": "https://github.com/honedlabs/monorepo/tree/main/packages/vue/modal#readme",
 	"files": [
 		"dist"
 	],
@@ -41,9 +45,9 @@
 		}
 	},
 	"peerDependencies": {
-		"vue": "^3.4.0",
-		"@inertiajs/vue3": "^1.2.0||^2.0.0",
-		"axios": "^1.2.0"
+		"@inertiajs/vue3": "^1.2.0||^2.0.0||^3.0.0",
+		"axios": "^1.2.0",
+		"vue": "^3.4.0"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
@@ -52,9 +56,9 @@
 		"axios": "^1.2.0",
 		"jsdom": "^25.0.1",
 		"typescript": "~5.4.0",
-		"vite": "^5.4.11",
-		"vite-plugin-dts": "^4.3.0",
-		"vitest": "^2.1.5",
-		"vue-tsc": "^2.1.10"
+		"vite": "^8.0.14",
+		"vite-plugin-dts": "^4.5.3",
+		"vitest": "^3.0.8",
+		"vue-tsc": "^2.2.8"
 	}
 }
