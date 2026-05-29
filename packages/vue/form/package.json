@@ -1,7 +1,7 @@
 {
 	"name": "@honed/form",
 	"private": false,
-	"version": "0.10.2",
+	"version": "0.11.0",
 	"license": "MIT",
 	"description": "Supercharge your forms with DTOs and InertiaJS.",
 	"keywords": [
@@ -49,7 +49,7 @@
 	},
 	"peerDependencies": {
 		"vue": "^3.4.0",
-		"@inertiajs/vue3": "^2.0.0",
+		"@inertiajs/vue3": "^2.0.0||^3.0.0",
 		"axios": "^1.2.0"
 	},
 	"devDependencies": {
