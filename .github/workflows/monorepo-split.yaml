@@ -31,18 +31,18 @@ jobs:
           # - infolist
           # - lang
           # - layout
-          - lock
+          # - lock
           # - memo
           # - modal
-          - nav
+          # - nav
           # - option
-          - page
+          # - page
           # - persist
-          - refine
+          # - refine
           # - registry
           # - scaffold
           # - stats
-          # - table
+          - table
           # - upload
           # - widget
     steps:
