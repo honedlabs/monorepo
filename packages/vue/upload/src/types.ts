@@ -29,7 +29,6 @@ export interface Callbacks<T = any> {
 	onFinish?: () => void;
 }
 
-
 export interface UploadFile extends AsFile {
 	id: number;
 	progress?: number;
@@ -43,7 +42,7 @@ export interface Options<T = any> extends Callbacks<T> {
 	upload?: Upload | ExtendedUpload;
 	waited?: boolean;
 	meta?: Record<string, any>;
-	files?: AsFile;
+	files?: AsFile[];
 }
 
 export interface FormAttributes {

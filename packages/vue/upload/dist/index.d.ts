@@ -1,8 +1,28 @@
+export declare interface AsFile {
+    name?: string;
+    source: File | string;
+    size?: number;
+    type?: string;
+    extension?: string;
+}
+
+export declare interface Callbacks<T = any> {
+    onStart?: (file: File) => void;
+    onError?: (error: Record<string, any>) => void;
+    onSuccess?: (data: T) => void;
+    onProgress?: (progress: number) => void;
+    onUploadError?: (error: Error) => void;
+    onUploadSuccess?: (data: T) => void;
+    onFinish?: () => void;
+}
+
 export declare interface ExtendedUpload extends Upload {
     extensions: string[];
     mimes: string[];
     size: number;
 }
+
+export declare function fileSize(bytes: number, precision?: number, maxPrecision?: number | null): string;
 
 export declare interface FormAttributes {
     action: string;
@@ -20,18 +40,11 @@ export declare interface FormInputs {
     "X-Amz-Signature": string;
 }
 
-export declare interface Options<T = any> {
+export declare interface Options<T = any> extends Callbacks<T> {
     upload?: Upload | ExtendedUpload;
     waited?: boolean;
     meta?: Record<string, any>;
-    files?: UploadFile[];
-    onStart?: (file: File) => void;
-    onError?: (error: Record<string, any>) => void;
-    onSuccess?: (data: T) => void;
-    onProgress?: (progress: number) => void;
-    onUploadError?: (error: Error) => void;
-    onUploadSuccess?: (data: T) => void;
-    onFinish?: () => void;
+    files?: AsFile[];
 }
 
 export declare interface Presign<T = any> {
@@ -40,22 +53,20 @@ export declare interface Presign<T = any> {
     data: T;
 }
 
+export declare const UNITS: string[];
+
 export declare interface Upload {
     multiple: boolean;
     message: string;
 }
 
-export declare interface UploadFile {
+export declare interface UploadFile extends AsFile {
     id: number;
-    name: string;
-    size?: number;
-    type?: string;
-    extension?: string;
     progress?: number;
     status?: UploadStatus;
     source: File | string;
     remove: () => void;
-    upload?: () => void;
+    upload?: (options?: Callbacks) => void;
 }
 
 export declare type UploadStatus = "pending" | "uploading" | "completed" | "error";
@@ -65,10 +76,6 @@ export declare type UseUpload = typeof useUpload;
 export declare function useUpload<T = any>(url: string, uploadOptions?: Options<T>): {
     files: {
         id: number;
-        name: string;
-        size?: number | undefined;
-        type?: string | undefined;
-        extension?: string | undefined;
         progress?: number | undefined;
         status?: UploadStatus | undefined;
         source: string | {
@@ -78,12 +85,17 @@ export declare function useUpload<T = any>(url: string, uploadOptions?: Options<
             readonly size: number;
             readonly type: string;
             arrayBuffer: () => Promise<ArrayBuffer>;
-            slice: (start?: number | undefined, end?: number | undefined, contentType?: string | undefined) => Blob;
-            stream: () => ReadableStream<Uint8Array>;
+            bytes: () => Promise<Uint8Array<ArrayBuffer>>;
+            slice: (start?: number, end?: number, contentType?: string) => Blob;
+            stream: () => ReadableStream<Uint8Array<ArrayBuffer>>;
             text: () => Promise<string>;
         };
         remove: () => void;
-        upload?: (() => void) | undefined;
+        upload?: ((options?: Callbacks) => void) | undefined;
+        name?: string | undefined;
+        size?: number | undefined;
+        type?: string | undefined;
+        extension?: string | undefined;
     }[];
     dragging: boolean;
     errors: Record<string, string[]>;

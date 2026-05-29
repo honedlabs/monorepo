@@ -1,6 +1,12 @@
 import { reactive, computed, ref } from "vue";
 import axios from "axios";
-import type { Options, UploadFile, UploadStatus, Presign, AsFile } from "./types";
+import type {
+	Options,
+	UploadFile,
+	UploadStatus,
+	Presign,
+	AsFile,
+} from "./types";
 
 export function useUpload<T = any>(
 	url: string,
