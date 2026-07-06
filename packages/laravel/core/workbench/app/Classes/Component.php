@@ -81,7 +81,7 @@ class Component extends Primitive implements HooksIntoLifecycle
     /**
      * Get the pipes to be used..
      *
-     * @return array<int,class-string<\Honed\Core\Pipe<$this>>>
+     * @return list<class-string<\Honed\Core\Pipe<$this>>>
      */
     protected function pipes(): array
     {
