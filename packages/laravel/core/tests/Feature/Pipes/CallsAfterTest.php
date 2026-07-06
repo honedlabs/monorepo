@@ -16,7 +16,7 @@ it('calls after', function () {
         fn ($component) => $component->name('after')
     );
 
-    $this->pipe->instance($this->component)->run();
+    $this->pipe->handle($this->component, fn ($component) => $component);
 
     expect($this->component)
         ->getName()->toBe('after');

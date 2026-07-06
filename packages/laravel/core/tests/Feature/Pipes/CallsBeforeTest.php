@@ -16,7 +16,7 @@ it('calls before', function () {
         fn ($component) => $component->name('before')
     );
 
-    $this->pipe->instance($this->component)->run();
+    $this->pipe->handle($this->component, fn ($component) => $component);
 
     expect($this->component)
         ->getName()->toBe('before');

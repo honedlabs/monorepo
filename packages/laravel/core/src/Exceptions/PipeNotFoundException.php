@@ -11,7 +11,7 @@ class PipeNotFoundException extends Exception
     /**
      * Create a new exception.
      *
-     * @param  class-string<\Honed\Core\Pipe>  $pipe
+     * @param  class-string<\Honed\Core\Pipe<*>>  $pipe
      */
     final public function __construct(string $pipe)
     {
@@ -23,7 +23,7 @@ class PipeNotFoundException extends Exception
     /**
      * Throw the exception.
      *
-     * @param  class-string<\Honed\Core\Pipe>  $pipe
+     * @param  class-string<\Honed\Core\Pipe<*>>  $pipe
      *
      * @throws self
      */

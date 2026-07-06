@@ -5,8 +5,6 @@ namespace {{ namespace }};
 use Honed\Core\Pipe;
 
 /**
- * @template T of mixed
- *
  * @extends \Honed\Core\Pipe<T>
  */
 class {{ class }} extends Pipe
@@ -14,7 +12,7 @@ class {{ class }} extends Pipe
     /**
      * Run the pipe logic.
      */
-    public function run(): void
+    public function run(mixed $instance): void
     {
         //
     }

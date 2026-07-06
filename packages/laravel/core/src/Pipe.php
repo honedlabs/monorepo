@@ -5,56 +5,52 @@ declare(strict_types=1);
 namespace Honed\Core;
 
 use Closure;
-use Honed\Core\Concerns\HasInstance;
+use Illuminate\Support\Facades\App;
+use ReflectionMethod;
+use ReflectionNamedType;
 
 /**
- * @template TClass = mixed
+ * @template T of Primitive
+ *
+ * @method void run(mixed ...$arguments)
  */
 abstract class Pipe
 {
-    /** @use HasInstance<TClass> */
-    use HasInstance {
-        __call as instanceCall;
-    }
-
-    /**
-     * Dynamically handle calls to the class.
-     *
-     * @param  string  $method
-     * @param  array<array-key,mixed>  $parameters
-     * @return mixed
-     */
-    public function __call($method, $parameters)
-    {
-        return $this->instanceCall($method, $parameters);
-    }
-
-    /**
-     * Run the pipe logic.
-     */
-    abstract public function run(): void;
-
     /**
      * Apply the pipe.
-     *
-     * @param  TClass  $instance
-     * @param  Closure(TClass): TClass  $next
-     * @return TClass
      */
-    public function handle($instance, Closure $next)
+    public function handle(Primitive $primitive, Closure $next): Primitive
     {
-        $this->through($instance);
+        App::call([$this, 'run'], $this->getParameters($primitive));
 
-        return $next($instance);
+        return $next($primitive);
     }
 
     /**
-     * Run the instance through the pipe.
+     * Get the parameters for the pipe.
      *
-     * @param  TClass  $instance
+     * @return array<string, mixed>
      */
-    public function through($instance): void
+    public function getParameters(Primitive $primitive): array
     {
-        $this->instance($instance)->run();
+        $method = new ReflectionMethod($this, 'run');
+
+        if ($method->getNumberOfParameters() === 0) {
+            return [];
+        }
+
+        $parameter = $method->getParameters()[0];
+
+        if ($parameter->getName() === 'instance') {
+            return ['instance' => $primitive];
+        }
+
+        $type = $parameter->getType();
+
+        if ($type instanceof ReflectionNamedType && ! $type->isBuiltin()) {
+            return [$type->getName() => $primitive];
+        }
+
+        return [$parameter->getName() => $primitive];
     }
 }

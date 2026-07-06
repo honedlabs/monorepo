@@ -13,11 +13,11 @@ afterEach(function () {
     SetType::reset();
 });
 
-it('sets instance', function () {
-    expect($this->pipe)
-        ->getInstance()->toBeNull()
-        ->instance(new Component())->toBe($this->pipe)
-        ->getInstance()->toBeInstanceOf(Component::class);
+it('binds the primitive as the first run parameter', function () {
+    $component = new Component();
+
+    expect($this->pipe->getParameters($component))
+        ->toBe([Component::class => $component]);
 });
 
 it('handles instance', function () {
@@ -28,11 +28,4 @@ it('handles instance', function () {
 
     expect($component)
         ->getType()->toBe('Pipeline 0');
-});
-
-it('calls instance methods', function () {
-    $component = new Component();
-
-    expect($this->pipe->instance($component))
-        ->getType()->toBeNull();
 });

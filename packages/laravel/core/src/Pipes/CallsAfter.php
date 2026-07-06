@@ -4,20 +4,19 @@ declare(strict_types=1);
 
 namespace Honed\Core\Pipes;
 
+use Honed\Core\Contracts\HooksIntoLifecycle;
 use Honed\Core\Pipe;
 
 /**
- * @template TClass of \Honed\Core\Contracts\HooksIntoLifecycle
- *
- * @extends Pipe<TClass>
+ * @extends Pipe<\Honed\Core\Primitive&\Honed\Core\Contracts\HooksIntoLifecycle>
  */
 class CallsAfter extends Pipe
 {
     /**
      * Run the pipe logic.
      */
-    public function run(): void
+    public function run(HooksIntoLifecycle $instance): void
     {
-        $this->getInstance()->callAfter();
+        $instance->callAfter();
     }
 }
