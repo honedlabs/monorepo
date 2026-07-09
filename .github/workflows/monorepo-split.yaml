@@ -27,7 +27,7 @@ jobs:
           # - disable
           # - flash
           # - form
-          # - honed
+          - honed
           - infolist
           # - lang
           # - layout
@@ -42,7 +42,7 @@ jobs:
           # - registry
           # - scaffold
           - stats
-          # - table
+          - table
           - upload
           # - widget
     steps:
