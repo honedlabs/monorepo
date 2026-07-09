@@ -124,10 +124,6 @@ abstract class CarbonFormatter extends LocalisedFormatter
 
         $value = $value->locale($this->getLocale());
 
-        if (! $value instanceof CarbonInterface) {
-            return null;
-        }
-
         return $value->translatedFormat($this->getDateFormat());
     }
 
