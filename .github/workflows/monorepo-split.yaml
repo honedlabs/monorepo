@@ -38,7 +38,7 @@ jobs:
           # - option
           # - page
           # - persist
-          # - refine
+          - refine
           # - registry
           # - scaffold
           # - stats
