@@ -13,7 +13,7 @@ class RetrieveBinders
      *
      * @return array<class-string<\Illuminate\Database\Eloquent\Model>, array<string, class-string<Binder>>>
      */
-    public static function get()
+    public static function get(): array
     {
         if (App::bindersAreCached()) {
             return require App::getCachedBindersPath();
@@ -32,9 +32,8 @@ class RetrieveBinders
      * Put the binders into the cache.
      *
      * @param  array<class-string<\Illuminate\Database\Eloquent\Model>, array<string, class-string<Binder>>>  $binds
-     * @return void
      */
-    public static function put($binds)
+    public static function put(array $binds): void
     {
         file_put_contents(
             App::getCachedBindersPath(),
@@ -45,9 +44,9 @@ class RetrieveBinders
     /**
      * Retrieve the discovered binders from the application.
      *
-     * @return array<class-string<Binder>>
+     * @return array<int, class-string<Binder>>
      */
-    public static function binders()
+    public static function binders(): array
     {
         $binders = [];
 
@@ -63,9 +62,8 @@ class RetrieveBinders
      *
      * @param  class-string<Binder>  $binder
      * @param  array<class-string<\Illuminate\Database\Eloquent\Model>, array<string, class-string<Binder>>>  $array
-     * @return void
      */
-    public static function bindings($binder, &$array)
+    public static function bindings(string $binder, array &$array): void
     {
         /** @var Binder $binder */
         $binder = App::make($binder);

@@ -35,21 +35,16 @@ class BinderMakeCommand extends GeneratorCommand
 
     /**
      * Get the stub file for the generator.
-     *
-     * @return string
      */
-    protected function getStub()
+    protected function getStub(): string
     {
         return $this->resolveStubPath('/stubs/honed.binder.stub');
     }
 
     /**
      * Resolve the fully-qualified path to the stub.
-     *
-     * @param  string  $stub
-     * @return string
      */
-    protected function resolveStubPath($stub)
+    protected function resolveStubPath(string $stub): string
     {
         return file_exists($customPath = $this->laravel->basePath(Str::trim($stub, '/')))
             ? $customPath
@@ -60,9 +55,8 @@ class BinderMakeCommand extends GeneratorCommand
      * Get the default namespace for the class.
      *
      * @param  string  $rootNamespace
-     * @return string
      */
-    protected function getDefaultNamespace($rootNamespace)
+    protected function getDefaultNamespace($rootNamespace): string
     {
         return $rootNamespace.'\Binders';
     }
@@ -72,7 +66,7 @@ class BinderMakeCommand extends GeneratorCommand
      *
      * @return array<int,array<int,mixed>>
      */
-    protected function getOptions()
+    protected function getOptions(): array
     {
         return [
             ['force', null, InputOption::VALUE_NONE, 'Create the class even if the binder already exists'],
@@ -82,7 +76,7 @@ class BinderMakeCommand extends GeneratorCommand
     /**
      * Binder for missing input arguments using the returned questions.
      *
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     protected function promptForMissingArgumentsUsing()
     {

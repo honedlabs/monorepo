@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Honed\Bind\Concerns;
 
 use Honed\Bind\Binder;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @phpstan-require-extends \Illuminate\Database\Eloquent\Model
@@ -13,11 +16,8 @@ trait HasBinder
 {
     /**
      * Get the binder for the model.
-     *
-     * @param  string|null  $field
-     * @return Binder|null
      */
-    public static function binder($field)
+    public static function binder(?string $field): ?Binder
     {
         return static::getBinder($field);
     }
@@ -25,11 +25,9 @@ trait HasBinder
     /**
      * Get a model using the specified binding.
      *
-     * @param  string|null  $field
-     * @param  mixed  $value
-     * @return \Illuminate\Database\Eloquent\Model|null
+     * @return static|null
      */
-    public static function firstBound($field = null, $value = null)
+    public static function firstBound(?string $field = null, mixed $value = null): ?Model
     {
         $field ??= 'default';
 
@@ -40,11 +38,9 @@ trait HasBinder
     /**
      * Scope the query using the specified binding.
      *
-     * @param  string|null  $field
-     * @param  mixed  $value
-     * @return \Illuminate\Database\Eloquent\Builder<static>
+     * @return Builder<static>
      */
-    public static function whereBound($field = null, $value = null)
+    public static function whereBound(?string $field = null, mixed $value = null): Builder
     {
         $field ??= 'default';
 
@@ -56,14 +52,11 @@ trait HasBinder
     /**
      * Get models using the specified binding.
      *
-     * @param  string|null  $field
-     * @param  mixed  $value
-     * @return \Illuminate\Database\Eloquent\Collection<int, $this>
+     * @return Collection<int, $this>
      */
-    public static function getBound($field = null, $value = null)
+    public static function getBound(?string $field = null, mixed $value = null): Collection
     {
-        return static::whereBound($field, $value)
-            ->get();
+        return static::whereBound($field, $value)->get();
     }
 
     /**
@@ -71,7 +64,7 @@ trait HasBinder
      *
      * @param  mixed  $value
      * @param  string|null  $field
-     * @return \Illuminate\Database\Eloquent\Model|null
+     * @return Model|null
      */
     public function resolveRouteBinding($value, $field = null)
     {
@@ -84,11 +77,8 @@ trait HasBinder
 
     /**
      * Get the binder for the model.
-     *
-     * @param  string|null  $field
-     * @return Binder|null
      */
-    protected static function getBinder($field)
+    protected static function getBinder(?string $field): ?Binder
     {
         return Binder::for(static::class, $field);
     }

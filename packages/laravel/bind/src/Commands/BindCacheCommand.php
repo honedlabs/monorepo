@@ -27,10 +27,8 @@ class BindCacheCommand extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         $this->callSilent('bind:clear');
 
@@ -66,9 +64,8 @@ class BindCacheCommand extends Command
      * Create a table of the cached bindings.
      *
      * @param  array<class-string<\Illuminate\Database\Eloquent\Model>, array<string, class-string<\Honed\Bind\Binder>>>  $content
-     * @return void
      */
-    protected function createTable($content)
+    protected function createTable(array $content): void
     {
         $headers = ['Model', 'Bindings'];
 

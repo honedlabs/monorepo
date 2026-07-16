@@ -45,9 +45,8 @@ class BindServiceProvider extends ServiceProvider
      * Add the given widget discovery paths to the application's widget discovery paths.
      *
      * @param  string|iterable<int, string>  $paths
-     * @return void
      */
-    public static function addBinderDiscoveryPaths(iterable|string $paths)
+    public static function addBinderDiscoveryPaths(iterable|string $paths): void
     {
         /** @var array<int, string> $paths */
         $paths = is_string($paths)
@@ -65,9 +64,8 @@ class BindServiceProvider extends ServiceProvider
      * Set the globally configured binder discovery paths.
      *
      * @param  iterable<int, string>  $paths
-     * @return void
      */
-    public static function setBinderDiscoveryPaths(iterable $paths)
+    public static function setBinderDiscoveryPaths(iterable $paths): void
     {
         static::$binderDiscoveryPaths = is_array($paths)
             ? $paths
@@ -77,51 +75,41 @@ class BindServiceProvider extends ServiceProvider
     /**
      * Get the globally configured binder discovery paths.
      *
-     * @return iterable<int, string>
+     * @return array<int, string>
      */
-    public static function getBinderDiscoveryPaths()
+    public static function getBinderDiscoveryPaths(): array
     {
         return static::$binderDiscoveryPaths;
     }
 
     /**
      * Disable binder discovery for the application.
-     *
-     * @param  bool  $disable
-     * @return void
      */
-    public static function disableBinderDiscovery($disable = true)
+    public static function disableBinderDiscovery(bool $disable = true): void
     {
         static::$shouldDiscoverBinders = ! $disable;
     }
 
     /**
      * Set the base of the discovery path.
-     *
-     * @param  string  $path
-     * @return void
      */
-    public static function setBinderDiscoveryBasePath($path)
+    public static function setBinderDiscoveryBasePath(string $path): void
     {
         static::$binderDiscoveryBasePath = $path;
     }
 
     /**
      * Get the base of the discovery path.
-     *
-     * @return string|null
      */
-    public static function getBinderDiscoveryBasePath()
+    public static function getBinderDiscoveryBasePath(): ?string
     {
         return static::$binderDiscoveryBasePath;
     }
 
     /**
      * Register services.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         App::macro('getCachedBindersPath', function () {
             /** @var \Illuminate\Foundation\Application $this */
@@ -143,10 +131,8 @@ class BindServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap services.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         if ($this->app->runningInConsole()) {
 
@@ -170,7 +156,7 @@ class BindServiceProvider extends ServiceProvider
      *
      * @return array<int, class-string<Binder>>
      */
-    public function getBinders()
+    public function getBinders(): array
     {
         return array_merge_recursive(
             $this->discoveredBinders(),
@@ -183,17 +169,15 @@ class BindServiceProvider extends ServiceProvider
      *
      * @return array<int, class-string<Binder>>
      */
-    public function binders()
+    public function binders(): array
     {
         return $this->binders;
     }
 
     /**
      * Determine if binders should be automatically discovered.
-     *
-     * @return bool
      */
-    public function shouldDiscoverBinders()
+    public function shouldDiscoverBinders(): bool
     {
         return get_class($this) === __CLASS__ && static::$shouldDiscoverBinders;
     }
@@ -203,7 +187,7 @@ class BindServiceProvider extends ServiceProvider
      *
      * @return array<int, class-string<Binder>>
      */
-    public function discoverBinders()
+    public function discoverBinders(): array
     {
         return (new LazyCollection($this->discoverBindersWithin()))
             ->flatMap(function ($directory) { // @phpstan-ignore argument.type
@@ -223,7 +207,7 @@ class BindServiceProvider extends ServiceProvider
      *
      * @return array<int, class-string<Binder>>
      */
-    public function discoveredBinders()
+    public function discoveredBinders(): array
     {
         return $this->shouldDiscoverBinders()
             ? $this->discoverBinders()
@@ -232,10 +216,8 @@ class BindServiceProvider extends ServiceProvider
 
     /**
      * Register the publishing for the package.
-     *
-     * @return void
      */
-    protected function offerPublishing()
+    protected function offerPublishing(): void
     {
         $this->publishes([
             __DIR__.'/../stubs' => base_path('stubs'),
@@ -245,9 +227,9 @@ class BindServiceProvider extends ServiceProvider
     /**
      * Get the directories that should be used to discover binders.
      *
-     * @return iterable<int, string>
+     * @return array<int, string>
      */
-    protected function discoverBindersWithin()
+    protected function discoverBindersWithin(): array
     {
         /** @var \Illuminate\Foundation\Application $app */
         $app = $this->app;
@@ -259,10 +241,8 @@ class BindServiceProvider extends ServiceProvider
 
     /**
      * Get the base path to be used during binder discovery.
-     *
-     * @return string
      */
-    protected function binderDiscoveryBasePath()
+    protected function binderDiscoveryBasePath(): string
     {
         return static::$binderDiscoveryBasePath ?? base_path();
     }

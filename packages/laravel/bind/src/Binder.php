@@ -59,10 +59,8 @@ abstract class Binder
      * Retrieve the binder for the model which binds the given field if it exists.
      *
      * @param  class-string<TModel>  $model
-     * @param  string  $field
-     * @return self|null
      */
-    public static function for($model, $field)
+    public static function for(string $model, string $field): ?static
     {
         return static::cached($model, $field);
     }
@@ -72,7 +70,7 @@ abstract class Binder
      *
      * @return class-string<\Illuminate\Database\Eloquent\Model>|null
      */
-    public static function getBindsAttribute()
+    public static function getBindsAttribute(): ?string
     {
         $attributes = (new ReflectionClass(static::class))
             ->getAttributes(Binds::class);
@@ -89,31 +87,31 @@ abstract class Binder
     /**
      * Specify the callback that should be invoked to guess model names based on binder names.
      *
-     * @param  callable(self): class-string<TModel>  $callback
-     * @return void
+     * @param  callable(self): class-string<TModel>|null  $callback
      */
-    public static function guessModelNamesUsing($callback)
+    public static function guessModelNamesUsing(?callable $callback): void
     {
+        if ($callback === null) {
+            unset(static::$modelNameResolvers[static::class]);
+
+            return;
+        }
+
         static::$modelNameResolvers[static::class] = $callback;
     }
 
     /**
      * Specify the default namespace that contains the application's model binders.
-     *
-     * @param  string  $namespace
-     * @return void
      */
-    public static function useNamespace($namespace)
+    public static function useNamespace(string $namespace): void
     {
         static::$namespace = $namespace;
     }
 
     /**
      * Flush the binder's global state.
-     *
-     * @return void
      */
-    public static function flushState()
+    public static function flushState(): void
     {
         static::$binders = null;
         static::$modelNameResolvers = [];
@@ -155,7 +153,7 @@ abstract class Binder
      *
      * @return array<int, string>
      */
-    public function bindings()
+    public function bindings(): array
     {
         return array_reduce(
             (new ReflectionClass($this))
@@ -176,7 +174,7 @@ abstract class Binder
      *
      * @return class-string<\Illuminate\Database\Eloquent\Model>
      */
-    public function modelName()
+    public function modelName(): string
     {
         if (isset($this->model)) {
             return $this->model;
@@ -208,10 +206,8 @@ abstract class Binder
      * Retrieve the binder from the cache.
      *
      * @param  class-string<TModel>  $model
-     * @param  string  $field
-     * @return self|null
      */
-    protected static function cached($model, $field)
+    protected static function cached(string $model, string $field): ?static
     {
         if (! isset(static::$binders)) {
             static::$binders = RetrieveBinders::get();
@@ -228,10 +224,8 @@ abstract class Binder
 
     /**
      * Get the application namespace for the application.
-     *
-     * @return string
      */
-    protected static function appNamespace()
+    protected static function appNamespace(): string
     {
         try {
             return Container::getInstance()
@@ -244,11 +238,8 @@ abstract class Binder
 
     /**
      * Determine if the class method is for binding.
-     *
-     * @param  ReflectionMethod  $method
-     * @return bool
      */
-    protected function binds($method)
+    protected function binds(ReflectionMethod $method): bool
     {
         return ! $method->isStatic()
             && $method->getDeclaringClass()->getName() === $this::class;

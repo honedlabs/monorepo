@@ -24,10 +24,9 @@ class DiscoverBinders
      * Get all of the binders by searching the given binder directory.
      *
      * @param  array<int, string>|string  $binderPath
-     * @param  string  $basePath
      * @return array<int, class-string<Binder>>
      */
-    public static function within($binderPath, $basePath)
+    public static function within(array|string $binderPath, string $basePath): array
     {
         if (Arr::wrap($binderPath) === []) {
             return [];
@@ -56,20 +55,16 @@ class DiscoverBinders
      * Specify a callback to be used to guess class names.
      *
      * @param  callable(SplFileInfo, string): class-string  $callback
-     * @return void
      */
-    public static function guessClassNamesUsing(callable $callback)
+    public static function guessClassNamesUsing(callable $callback): void
     {
         static::$guessClassNamesUsingCallback = $callback;
     }
 
     /**
      * Determine if the binder is invalid.
-     *
-     * @param  string  $binder
-     * @return bool
      */
-    protected static function invalidBinder($binder)
+    protected static function invalidBinder(string $binder): bool
     {
         return ! class_exists($binder)
             || ! is_subclass_of($binder, Binder::class)
@@ -78,11 +73,8 @@ class DiscoverBinders
 
     /**
      * Extract the class name from the given file path.
-     *
-     * @param  string  $basePath
-     * @return string
      */
-    protected static function classFromFile(SplFileInfo $file, $basePath)
+    protected static function classFromFile(SplFileInfo $file, string $basePath): string
     {
         if (static::$guessClassNamesUsingCallback) {
             return call_user_func(static::$guessClassNamesUsingCallback, $file, $basePath);
