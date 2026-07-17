@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1779620253">
-  <project timestamp="1779620253" name="Clover Coverage">
+<coverage generated="1784331840">
+  <project timestamp="1784331840" name="Clover Coverage">
     <package name="Honed\Crumb\Attributes">
       <file name="/home/josh/code/honed/honed/packages/laravel/crumb/src/Attributes/Trail.php">
         <class name="Honed\Crumb\Attributes\Trail" namespace="Honed\Crumb\Attributes">
