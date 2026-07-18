@@ -25,12 +25,23 @@ export function useUpload<T = any>(
 	 * Ref containing the files
 	 */
 	const files = ref<UploadFile[]>(
-		(uploadOptions.files || []).map((file: AsFile, i: number) => ({
-			...file,
-			id: id.value++,
-			remove: () => remove(i),
-		})),
+		(uploadOptions.files || []).map((file: AsFile) => {
+			const identifier = id.value++;
+
+			return {
+				...file,
+				id: identifier,
+				status: "completed" as UploadStatus,
+				remove: () => remove(identifier),
+				preview: () => preview(file.source),
+			};
+		}),
 	);
+
+	/**
+	 * Whether there are any files in the uploader.
+	 */
+	const hasFiles = computed(() => files.value.length > 0);
 
 	/**
 	 * Ref containing whether there are files being dragged.
@@ -71,16 +82,42 @@ export function useUpload<T = any>(
 			progress: 0,
 			status: "pending" as UploadStatus,
 			source: file,
-			upload: () => {
+			upload: function (options: Options<T> = {}) {
+				const {
+					onStart,
+					onUploadSuccess,
+					onError,
+					onUploadError,
+					onProgress,
+					...rest
+				} = options;
+
 				upload(uploadFile.source as File, {
-					onStart: () => (uploadFile.status = "uploading"),
-					onUploadSuccess: () => (uploadFile.status = "completed"),
-					onError: () => (uploadFile.status = "error"),
-					onUploadError: () => (uploadFile.status = "error"),
-					onProgress: (progress: number) => (uploadFile.progress = progress),
+					onStart: function (file: File) {
+						onStart?.(file);
+						uploadFile.status = "uploading";
+					},
+					onUploadSuccess: function (data: T) {
+						onUploadSuccess?.(data);
+						uploadFile.status = "completed";
+					},
+					onError: function (error: Record<string, any>) {
+						onError?.(error);
+						uploadFile.status = "error";
+					},
+					onUploadError: function (error: Error) {
+						onUploadError?.(error);
+						uploadFile.status = "error";
+					},
+					onProgress: function (progress: number) {
+						onProgress?.(progress);
+						uploadFile.progress = progress;
+					},
+					...rest,
 				});
 			},
 			remove: () => remove(identifier),
+			preview: () => preview(uploadFile.source),
 		});
 
 		files.value.unshift(uploadFile);
@@ -123,6 +160,7 @@ export function useUpload<T = any>(
 					formData.append(key, value as string),
 				);
 
+				formData.append("Content-Type", file.type);
 				formData.append("file", file);
 
 				axios
@@ -138,7 +176,7 @@ export function useUpload<T = any>(
 					.catch((error: Error) => onEvent<Error>("onUploadError", error));
 			})
 			.catch((error) => {
-				Object.assign(errors, error.response.data);
+				Object.assign(errors, error?.response?.data);
 
 				onEvent<Record<string, any>>("onError", error);
 			})
@@ -149,7 +187,15 @@ export function useUpload<T = any>(
 	 * Remove a single file by the identifier.
 	 */
 	function remove(identifier: number) {
-		files.value = files.value.filter(({ id }) => id !== identifier);
+		const index = files.value.findIndex(
+			({ id }: { id: number }) => id === identifier,
+		);
+
+		if (index === -1) return;
+
+		const [file] = files.value.splice(index, 1);
+
+		uploadOptions.onRemove?.(file);
 	}
 
 	/**
@@ -160,10 +206,33 @@ export function useUpload<T = any>(
 	}
 
 	/**
-	 * Bind a region to be the drag and drop zone.
+	 * Collect files from a clipboard paste event.
+	 */
+	function clipboardFiles(
+		clipboardData: DataTransfer | null | undefined,
+	): File[] {
+		if (!clipboardData) {
+			return [];
+		}
+
+		const fromFiles = Array.from(clipboardData.files || []);
+
+		if (fromFiles.length) {
+			return fromFiles;
+		}
+
+		return Array.from(clipboardData.items || [])
+			.filter((item) => item.kind === "file")
+			.map((item) => item.getAsFile())
+			.filter((file): file is File => file !== null);
+	}
+
+	/**
+	 * Bind a region to be the drag, drop, and paste zone.
 	 */
 	function dragRegion() {
 		return {
+			tabindex: 0,
 			ondragover: (e: DragEvent) => {
 				e.preventDefault();
 				dragging.value = true;
@@ -176,6 +245,16 @@ export function useUpload<T = any>(
 			ondragleave: (e: DragEvent) => {
 				e.preventDefault();
 				dragging.value = false;
+			},
+			onpaste: (e: ClipboardEvent) => {
+				const files = clipboardFiles(e.clipboardData);
+
+				if (!files.length) {
+					return;
+				}
+
+				e.preventDefault();
+				addFiles(files);
 			},
 		};
 	}
@@ -197,16 +276,21 @@ export function useUpload<T = any>(
 	/**
 	 * Create a displayable URL for the file.
 	 */
-	function preview(file: File | string) {
-		if (typeof file === "string") {
+	function preview(file: File | string | undefined | null) {
+		if (!file || typeof file === "string") {
 			return file;
 		}
 
-		return URL.createObjectURL(file);
+		try {
+			return URL.createObjectURL(file);
+		} catch (error) {
+			return null;
+		}
 	}
 
 	return reactive({
 		files,
+		hasFiles,
 		dragging,
 		errors,
 		hasErrors,

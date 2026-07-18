@@ -36,6 +36,7 @@ export interface UploadFile extends AsFile {
 	source: File | string;
 	remove: () => void;
 	upload?: (options?: Callbacks) => void;
+	preview: () => string | null | undefined;
 }
 
 export interface Options<T = any> extends Callbacks<T> {
@@ -43,6 +44,7 @@ export interface Options<T = any> extends Callbacks<T> {
 	waited?: boolean;
 	meta?: Record<string, any>;
 	files?: AsFile[];
+	onRemove?: (file: UploadFile) => void;
 }
 
 export interface FormAttributes {
