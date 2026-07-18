@@ -20,30 +20,30 @@ jobs:
           # - billing
           # - bind
           # - chart
-          # - command
+          - command
           # - core
           # - crumb
           # - data
           # - disable
-          # - flash
-          # - form
+          - flash
+          - form
           # - honed
           # - infolist
-          # - lang
+          - lang
           # - layout
           # - lock
           # - memo
-          # - modal
+          - modal
           # - nav
           # - option
           # - page
-          # - persist
-          - refine
+          - persist
+          # - refine
           # - registry
           # - scaffold
           # - stats
-          - table
-          # - upload
+          # - table
+          - upload
           # - widget
     steps:
       - name: Checkout
