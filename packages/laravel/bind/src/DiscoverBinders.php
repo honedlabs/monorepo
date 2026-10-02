@@ -23,8 +23,8 @@ class DiscoverBinders
     /**
      * Get all of the binders by searching the given binder directory.
      *
-     * @param  array<int, string>|string  $binderPath
-     * @return array<int, class-string<Binder>>
+     * @param  list<string>|string  $binderPath
+     * @return list<class-string<Binder>>
      */
     public static function within(array|string $binderPath, string $basePath): array
     {
@@ -32,9 +32,12 @@ class DiscoverBinders
             return [];
         }
 
-        $files = Finder::create()->files()->in($binderPath);
+        $files = Finder::create()
+            ->files()
+            ->name('*.php')
+            ->in($binderPath);
 
-        /** @var array<int, class-string<Binder>> $binders */
+        /** @var list<class-string<Binder>> $binders */
         $binders = [];
 
         foreach ($files as $file) {

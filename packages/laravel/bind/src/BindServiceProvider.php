@@ -16,7 +16,7 @@ class BindServiceProvider extends ServiceProvider
     /**
      * The binders to manually register.
      *
-     * @var array<int, class-string<Binder>>
+     * @var list<class-string<Binder>>
      */
     protected $binders = [];
 
@@ -30,7 +30,7 @@ class BindServiceProvider extends ServiceProvider
     /**
      * The paths to discover binders.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected static $binderDiscoveryPaths = [];
 
@@ -48,16 +48,21 @@ class BindServiceProvider extends ServiceProvider
      */
     public static function addBinderDiscoveryPaths(iterable|string $paths): void
     {
-        /** @var array<int, string> $paths */
-        $paths = is_string($paths)
+        /** @var list<string> $paths */
+        $paths = array_values(is_string($paths)
             ? [$paths]
-            : (is_array($paths) ? $paths : iterator_to_array($paths));
+            : (is_array($paths) ? $paths : iterator_to_array($paths)));
 
-        static::$binderDiscoveryPaths = (new LazyCollection(static::$binderDiscoveryPaths))
-            ->merge($paths)
-            ->unique()
-            ->values()
-            ->all();
+        /** @var list<string> $discoveryPaths */
+        $discoveryPaths = array_values(
+            (new LazyCollection(static::$binderDiscoveryPaths))
+                ->merge($paths)
+                ->unique()
+                ->values()
+                ->all()
+        );
+
+        static::$binderDiscoveryPaths = $discoveryPaths;
     }
 
     /**
@@ -67,15 +72,16 @@ class BindServiceProvider extends ServiceProvider
      */
     public static function setBinderDiscoveryPaths(iterable $paths): void
     {
-        static::$binderDiscoveryPaths = is_array($paths)
-            ? $paths
-            : iterator_to_array($paths);
+        /** @var list<string> $discoveryPaths */
+        $discoveryPaths = array_values(is_array($paths) ? $paths : iterator_to_array($paths));
+
+        static::$binderDiscoveryPaths = $discoveryPaths;
     }
 
     /**
      * Get the globally configured binder discovery paths.
      *
-     * @return array<int, string>
+     * @return list<string>
      */
     public static function getBinderDiscoveryPaths(): array
     {
@@ -154,20 +160,23 @@ class BindServiceProvider extends ServiceProvider
     /**
      * Get the binders which can be registered.
      *
-     * @return array<int, class-string<Binder>>
+     * @return list<class-string<Binder>>
      */
     public function getBinders(): array
     {
-        return array_merge_recursive(
+        /** @var list<class-string<Binder>> $binders */
+        $binders = array_values(array_unique(array_merge(
             $this->discoveredBinders(),
-            $this->binders()
-        );
+            $this->binders(),
+        )));
+
+        return $binders;
     }
 
     /**
      * Get the binders that should be cached.
      *
-     * @return array<int, class-string<Binder>>
+     * @return list<class-string<Binder>>
      */
     public function binders(): array
     {
@@ -185,27 +194,34 @@ class BindServiceProvider extends ServiceProvider
     /**
      * Discover the binders for the application.
      *
-     * @return array<int, class-string<Binder>>
+     * @return list<class-string<Binder>>
      */
     public function discoverBinders(): array
     {
-        return (new LazyCollection($this->discoverBindersWithin()))
-            ->flatMap(function ($directory) { // @phpstan-ignore argument.type
-                return glob($directory, GLOB_ONLYDIR);
+        $binders = (new LazyCollection($this->discoverBindersWithin()))
+            ->flatMap(function ($directory) {
+                return glob($directory, GLOB_ONLYDIR) ?: [];
             })
             ->reject(function ($directory) {
                 return ! is_dir($directory);
             })
-            ->pipe(fn ($directories) => DiscoverBinders::within(
-                $directories->all(),
-                $this->binderDiscoveryBasePath(),
-            ));
+            ->pipe(function ($directories) {
+                /** @var list<string> $paths */
+                $paths = array_values($directories->all());
+
+                return DiscoverBinders::within(
+                    $paths,
+                    $this->binderDiscoveryBasePath(),
+                );
+            });
+
+        return $binders;
     }
 
     /**
      * Get the discovered binders for the application.
      *
-     * @return array<int, class-string<Binder>>
+     * @return list<class-string<Binder>>
      */
     public function discoveredBinders(): array
     {
@@ -227,7 +243,7 @@ class BindServiceProvider extends ServiceProvider
     /**
      * Get the directories that should be used to discover binders.
      *
-     * @return array<int, string>
+     * @return list<string>
      */
     protected function discoverBindersWithin(): array
     {

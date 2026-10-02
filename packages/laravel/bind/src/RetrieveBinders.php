@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Bind;
 
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\App;
 
 class RetrieveBinders
@@ -35,26 +36,36 @@ class RetrieveBinders
      */
     public static function put(array $binds): void
     {
-        file_put_contents(
-            App::getCachedBindersPath(),
-            '<?php return '.var_export($binds, true).';'
+        $path = App::getCachedBindersPath();
+
+        /** @var Filesystem $files */
+        $files = App::make(Filesystem::class);
+
+        $files->ensureDirectoryExists(dirname($path));
+
+        // Atomic replace so a request cannot `require` a half-written map.
+        $files->replace(
+            $path,
+            '<?php return '.var_export($binds, true).';'.PHP_EOL
         );
     }
 
     /**
      * Retrieve the discovered binders from the application.
      *
-     * @return array<int, class-string<Binder>>
+     * @return list<class-string<Binder>>
      */
     public static function binders(): array
     {
         $binders = [];
 
         foreach (App::getProviders(BindServiceProvider::class) as $provider) {
-            $binders = \array_merge($binders, $provider->getBinders());
+            foreach ($provider->getBinders() as $binder) {
+                $binders[] = $binder;
+            }
         }
 
-        return $binders;
+        return array_values(array_unique($binders));
     }
 
     /**

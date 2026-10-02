@@ -6,17 +6,19 @@ namespace Honed\Bind;
 
 use Honed\Bind\Attributes\Binds;
 use Illuminate\Container\Container;
+use Illuminate\Contracts\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 use ReflectionClass;
 use ReflectionMethod;
 use Throwable;
 
-use function array_reduce;
-
 /**
- * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
+ * @template T of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
  */
 abstract class Binder
 {
@@ -30,7 +32,7 @@ abstract class Binder
     /**
      * The name of the binder's corresponding model.
      *
-     * @var class-string<TModel>|null
+     * @var class-string<T>|null
      */
     protected $model;
 
@@ -44,21 +46,21 @@ abstract class Binder
     /**
      * Store a memory-cache of the binders to ensure that we don't have to re-instantiate them.
      *
-     * @var array<class-string<\Illuminate\Database\Eloquent\Model>, array<string, class-string<self>>>|null
+     * @var array<class-string<Model>, array<string, class-string<self>>>|null
      */
     protected static $binders;
 
     /**
      * The default model name resolvers.
      *
-     * @var array<class-string, callable(self): class-string<TModel>>
+     * @var array<class-string, callable(self): class-string<T>>
      */
     protected static $modelNameResolvers = [];
 
     /**
      * Retrieve the binder for the model which binds the given field if it exists.
      *
-     * @param  class-string<TModel>  $model
+     * @param  class-string<T>  $model
      */
     public static function for(string $model, string $field): ?static
     {
@@ -68,7 +70,7 @@ abstract class Binder
     /**
      * Get the binder from the Binds class attribute.
      *
-     * @return class-string<\Illuminate\Database\Eloquent\Model>|null
+     * @return class-string<Model>|null
      */
     public static function getBindsAttribute(): ?string
     {
@@ -87,7 +89,7 @@ abstract class Binder
     /**
      * Specify the callback that should be invoked to guess model names based on binder names.
      *
-     * @param  callable(self): class-string<TModel>|null  $callback
+     * @param  callable(self): class-string<T>|null  $callback
      */
     public static function guessModelNamesUsing(?callable $callback): void
     {
@@ -121,58 +123,77 @@ abstract class Binder
     /**
      * Resolve the binding for the model.
      *
-     * @param  \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>|\Illuminate\Database\Eloquent\Relations\Relation  $query
-     * @param  mixed  $value
-     * @param  string  $field
-     * @return \Illuminate\Database\Eloquent\Model|null
+     * @param  T|\Illuminate\Contracts\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Relations\Relation<T, *, *>  $query
+     * @return T|null
      */
-    public function resolve($query, $value, $field) // @phpstan-ignore missingType.generics
+    public function resolve(Model|EloquentBuilder $query, mixed $value, string $field): ?Model
     {
-        return $this->query($query, $value, $field)->first();
+        /** @var \Illuminate\Database\Eloquent\Builder<T>|\Illuminate\Database\Eloquent\Relations\Relation<T, *, *> $result */
+        $result = $this->query($query, $value, $field);
+
+        /** @var T|null $model */
+        $model = $result->first();
+
+        return $model;
+    }
+
+    /**
+     * Get the field, accounting for qualified column names.
+     */
+    public function getField(string $field): string
+    {
+        return Str::afterLast($field, '.');
     }
 
     /**
      * Resolve the binding query for the model.
      *
-     * @param  \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>|\Illuminate\Database\Eloquent\Relations\Relation  $query
-     * @param  mixed  $value
-     * @param  string  $field
-     * @return \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>
+     * Constraints are added to the query Laravel already scoped, including global
+     * scopes and child-relation constraints.
+     *
+     * @param  T|\Illuminate\Contracts\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Relations\Relation<T, *, *>  $query
      */
-    public function query($query, $value, $field) // @phpstan-ignore missingType.generics
+    public function query(Model|EloquentBuilder $query, mixed $value, string $field): EloquentBuilder
     {
+        $field = $this->getField($field);
+
         if (isset($this->key)) {
-            $query = $query->where($this->key, $value);
+            $column = $this->qualifyKey($query, $this->key);
+
+            // `newQuery()` keeps global scopes. Relations and builders already carry theirs.
+            $query = $query instanceof Model
+                ? $query->newQuery()->where($column, $value)
+                : $query->where($column, $value);
         }
 
-        return $this->{$field}($query, $value);
+        /** @var \Illuminate\Database\Eloquent\Builder<T>|\Illuminate\Database\Eloquent\Relations\Relation<T, *, *> $result */
+        $result = $this->{$field}($query, $value);
+
+        return $result;
     }
 
     /**
      * Get the bindings available on this binder.
      *
-     * @return array<int, string>
+     * @return list<string>
      */
     public function bindings(): array
     {
-        return array_reduce(
-            (new ReflectionClass($this))
-                ->getMethods(ReflectionMethod::IS_PUBLIC),
+        $bindings = [];
 
-            function (array $bindings, ReflectionMethod $method) {
-                if ($this->binds($method)) {
-                    $bindings[] = $method->getName();
-                }
+        foreach ((new ReflectionClass($this))->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+            if ($this->binds($method)) {
+                $bindings[] = $method->getName();
+            }
+        }
 
-                return $bindings;
-            }, []
-        );
+        return $bindings;
     }
 
     /**
      * Get the name of the model that is generated by the binder.
      *
-     * @return class-string<\Illuminate\Database\Eloquent\Model>
+     * @return class-string<Model>
      */
     public function modelName(): string
     {
@@ -198,18 +219,22 @@ abstract class Binder
                 : $appNamespace.$binderBasename;
         };
 
-        /** @var class-string<\Illuminate\Database\Eloquent\Model> */
+        /** @var class-string<Model> */
         return $resolver($this);
     }
 
     /**
      * Retrieve the binder from the cache.
      *
-     * @param  class-string<TModel>  $model
+     * @param  class-string<T>  $model
      */
     protected static function cached(string $model, string $field): ?static
     {
+        // Qualified child-binding columns (`posts.slug`) are stored under the method name.
+        $field = Str::afterLast($field, '.');
+
         if (! isset(static::$binders)) {
+            // One map for the process: a `require` of the opcached file, or a single discovery pass.
             static::$binders = RetrieveBinders::get();
         }
 
@@ -237,11 +262,43 @@ abstract class Binder
     }
 
     /**
+     * Qualify a binder key so child relations with joins do not match an ambiguous column.
+     *
+     * @param  T|\Illuminate\Contracts\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Relations\Relation<T, *, *>  $query
+     */
+    protected function qualifyKey(Model|EloquentBuilder $query, string $key): string
+    {
+        if (str_contains($key, '.')) {
+            return $key;
+        }
+
+        $model = match (true) {
+            $query instanceof Model => $query,
+            $query instanceof Relation => $query->getRelated(),
+            $query instanceof Builder => $query->getModel(),
+            default => null,
+        };
+
+        return $model instanceof Model ? $model->qualifyColumn($key) : $key;
+    }
+
+    /**
      * Determine if the class method is for binding.
      */
     protected function binds(ReflectionMethod $method): bool
     {
-        return ! $method->isStatic()
-            && $method->getDeclaringClass()->getName() === $this::class;
+        if ($method->isStatic() || str_starts_with($method->getName(), '__')) {
+            return false;
+        }
+
+        $declaring = $method->getDeclaringClass();
+
+        if ($declaring->getName() === $this::class) {
+            return true;
+        }
+
+        // Methods brought in from a trait report the trait as their declaring class.
+        return $declaring->isTrait()
+            && in_array($declaring->getName(), trait_uses_recursive($this::class), true);
     }
 }
