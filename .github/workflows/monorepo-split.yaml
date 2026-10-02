@@ -18,7 +18,7 @@ jobs:
           # - abn
           # - action
           # - billing
-          # - bind
+          - bind
           # - chart
           # - command
           # - core
@@ -37,13 +37,13 @@ jobs:
           # - nav
           # - option
           # - page
-          - persist
-          - refine
+          # - persist
+          # - refine
           # - registry
           # - scaffold
           # - stats
           # - table
-          - upload
+          # - upload
           # - widget
     steps:
       - name: Checkout
