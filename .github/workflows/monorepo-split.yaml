@@ -18,7 +18,7 @@ jobs:
           # - abn
           # - action
           # - billing
-          - bind
+          # - bind
           # - chart
           # - command
           # - core
@@ -37,7 +37,7 @@ jobs:
           # - nav
           # - option
           # - page
-          # - persist
+          - persist
           # - refine
           # - registry
           # - scaffold
