@@ -37,8 +37,8 @@ jobs:
           # - nav
           # - option
           # - page
-          - persist
-          # - refine
+          # - persist
+          - refine
           # - registry
           # - scaffold
           # - stats
